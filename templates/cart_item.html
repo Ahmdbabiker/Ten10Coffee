@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@200..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Document</title>
+</head>
+<body dir="rtl">
+
+
+    <!--navbar start-->
+
+
+
+
+
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{% static 'images/tenten.png' %}" height="80px" width="80px">
+        </div>
+        <div class="tit">
+            <small>دومـاً, عشرة على 10</small>
+        </div>
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <ul class="nav-list">
+            <li><a href="{% url 'home' %}">الرئيسية</a></li>
+            <li><a href="{% url 'contact' %}">التواصل</a></li>
+            <li><a href="{% url 'cart_summary' %}">
+                السلة (<span id="cart_quantity"> {{cart|length}}</span>)
+            </a></li>
+            {% if request.user.is_authenticated %}
+
+            <li><a href="#">{{request.user.username}}</a></li>
+            <li><a href="{% url 'signout' %}">خروج</a></li>
+            {%else%}
+            <li class="uniqe"><a href="{% url 'signin' %}">دخول</a></li>
+            <li class="uniqe"><a href="{% url 'signup' %}">تسجيل</a></li>
+            {%endif%}
+        </ul>
+    </nav>
+    <!--navbar ending-->
+    <!--navbar ending-->
+
+
+
+
+
+
+
+
+
+
+    <!-- meal details-->
+
+    <div class="cart_detail">
+       <div class="container">
+           <h2>تفـاصيل مشترياتك</h2>
+           <a href="{% url 'home' %}" style="background-color: rgb(26, 26, 26);color:white;padding: 4px;margin: 4px 0;">متـابعة التسـوق</a>
+           <div class="taking-sides">
+
+
+           <div class="nvv">
+
+
+            {% if cart_products %}
+            {% for products in cart_products%}
+            <div class="products">
+                <div class="prod-img">
+                    <img src="{{products.image.url}}">
+                </div>
+                <div class="pro-desc">
+                    <h4> {{products.name}}  </h4>
+                    <h2 style="font-weight: 500;">{{products.price}} د.إ</h2>
+                    <label>الكمـية : </label>
+                    <select id="select{{ products.id }}">
+                        {% for key, value in quantities.items %}
+                            {% if key == products.id|slugify %}
+                                <option selected value="{{value.quantity}}">{{value.quantity}}</option>
+
+                            {% endif %}
+                        {% endfor %}
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                        <option value="5">5</option>
+                    </select>
+
+                    <button type="button"
+            data-index="{{products.id}}" class="update-cart upd">تحديث الكمية</button>
+            <button type="button"
+            data-index="{{products.id}}" class="delete-product del">حذف</button>
+
+                </div>
+            </div>
+            {% endfor%}
+            {% else %}
+
+            <div class="emptyy" style="margin: 10px 0;">
+            <h3> السلة فارغة !</h3>
+            <small style="color: gray;"> إملئها الآن وتمتع بألذ المشروبات والمأكولات   </small>
+            </div>
+            <br>
+
+            {% endif %}
+
+
+
+
+
+
+        </div>
+
+
+
+
+
+
+           <div class="bills">
+
+
+
+                <div class="billing">
+                    <a href="{% url 'customer_data' %}">الإستمرار للدفع</a>
+                </div>
+
+           </div>
+
+
+        </div>
+       </div>
+    </div>
+
+    <!-- meal details-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--footer -->
+
+         <!--footer start-->
+         <div class="footer">
+            <!--<div class="container">-->
+                <div class="taking-footer">
+
+                    <div class="taking-links">
+                        <a href="#">سياسة الخصوصية</a>
+                        <a href="#">تواصل معنـا </a>
+                        <a href="#">الشروط والأحكام </a>
+                        <a href="#"> الرئيـسية</a>
+                    </div>
+                    <div class="log">
+                        <img src="{% static 'images/tenten.png'%}" height="80px" width="80px"><br>
+                        <small>All Rights Reserved 2024<i class="fa-regular fa-copyright"></i></small>
+                      <br><small>Developed by Ahmd Babiker</small>
+                  </div>
+                </div>
+
+        </div>
+    <!--footer end-->
+    <!--footer -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+    <script>
+      $(document).on('click', '.update-cart', function(e) {
+    e.preventDefault();
+    var productid = $(this).data('index');
+    var quantity = $('#select' + productid).val();
+
+    $.ajax({
+        type: 'POST',
+        url: '{% url "cart_update" %}',
+        data: {
+            product_id: productid,
+            product_qty: quantity,
+            csrfmiddlewaretoken: '{{ csrf_token }}',
+            action: 'post'
+        },
+        success: function(json) {
+            // Update the selected quantity dynamically
+            $('#select' + json.product_id).val(json.qty);
+            alert('تم تحديث الكمية!');
+        },
+        error: function(xhr, errmsg, err) {
+            alert('خطأ في تحديث الكمية');
+        }
+    });
+});
+
+
+
+        //delete product
+
+
+
+        $(document).on('click' , '.delete-product' , function(e){
+            e.preventDefault();
+            //var productid = $(this).data('index')
+            $.ajax({
+                type : 'POST',
+                url: '{% url "cart_delete" %}',
+                data : {
+                    product_id: $(this).data('index'),
+                    csrfmiddlewaretoken : '{{csrf_token}}',
+                    action : 'post'
+                },
+                success : function(json){
+                   location.reload()
+                },
+                error:function(xhr,errmsg , err){
+
+                }
+
+
+            });
+        })
+
+
+
+
+        </script>
+
+
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@200..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Document</title>
+</head>
+<body dir="rtl">
+
+
+    <!--navbar start-->
+
+ <nav class="navbar">
+        <div class="logo">
+            <img src="{% static 'images/tenten.png' %}" height="80px" width="80px">
+        </div>
+        <div class="tit">
+            <small>دومـاً, عشرة على 10</small>
+        </div>
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <ul class="nav-list">
+            <li><a href="{% url 'home' %}">الرئيسية</a></li>
+            <li><a href="{% url 'contact' %}">التواصل</a></li>
+            <li><a href="{% url 'cart_summary' %}">
+                السلة (<span id="cart_quantity"> {{cart|length}}</span>)
+            </a></li>
+            {% if request.user.is_authenticated %}
+
+            <li><a href="{% url 'edit_shiping_phone' request.user.id %}">{{request.user.username}}</a></li>
+            <li><a href="{% url 'signout' %}">خروج</a></li>
+            <li><a href="{% url 'myorders' request.user.id %}">طلباتي</a></li>
+            {%else%}
+            <li class="uniqe"><a href="{% url 'signin' %}">دخول</a></li>
+            <li class="uniqe"><a href="{% url 'signup' %}">تسجيل</a></li>
+            {%endif%}
+        </ul>
+    </nav>
+    <!--navbar ending-->
+
+
+
+    <div class="signup-form">
+        <div class="container">
+            <div class="form-handler">
+                <h2>إنشاء حساب </h2>
+                <form method="POST">
+                    {% csrf_token %}
+                    <input type="text" name="name" placeholder=" إسم المستخدم" required><br>
+
+                    <input type="number" name="phone" placeholder="رقم الهاتف" required><br>
+                    <input type="email" name="email" placeholder="البريد الإلكتروني" required><br>
+
+                   <label>المنطقة</label>
+                    <select aria-placeholder="المنطقة" name="location">
+                        <option value="A">أبوظبي</option>
+                        <option value="B">العين</option>
+                        <option value="C">عجمان</option>
+                        <option value="D">دبي</option>
+                        <option value="E">الفجيرة</option>
+                        <option value="F">الشارقة</option>
+                        <option value="J">راس الخيمة</option>
+                        <option value="H">ام القيوين</option>
+                    </select><br>
+
+                    <input type="password" name="pass"  placeholder="كملة المرور" required><br>
+                    <input type="password" name="pass1" placeholder="تأكيد كلمة المرور" required><br>
+                    <p class="login">هل تملك حساب بالفعل ؟ <a href="#" class="loginurl">تسجيل الدخول</a></p>
+                    <input type="submit" class="push" value="إنشاء ">
+
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--footer -->
+
+    <div class="footer">
+        <div class="container">
+
+            <div class="footer-title">
+                <h2>من البيـت</h2>
+            </div>
+            <div class="footer-links">
+                <a href="#">عننا ؟ </a>
+                <a href="#">سياسة الخصوصية</a>
+                <a href="#">الشروط والأحكام</a>
+                <a href="#">تواصل معنا</a>
+                <a href="#">الرئيسية</a>
+            </div>
+            <small>جميع الحقوق محفوظة 2024</small><br>
+            <small>Developed By : A h m d   B a b i k e r</small>
+        </div>
+    </div>
+<!--footer -->

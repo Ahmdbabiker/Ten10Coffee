@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@200..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Document</title>
+</head>
+<body dir="rtl">
+
+
+    <!--navbar start-->
+
+
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{% static 'images/tenten.png' %}" height="80px" width="80px">
+        </div>
+        <div class="tit">
+            <small>دومـاً, عشرة على 10</small>
+        </div>
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <ul class="nav-list">
+            <li><a href="{% url 'home' %}">الرئيسية</a></li>
+            <li><a href="{% url 'contact' %}">التواصل</a></li>
+            <li><a href="{% url 'cart_summary' %}">
+                السلة (<span id="cart_quantity"> {{cart|length}}</span>)
+            </a></li>
+            {% if request.user.is_authenticated %}
+
+            <li><a href="#">{{request.user.username}}</a></li>
+            <li><a href="{% url 'signout' %}">خروج</a></li>
+            {%else%}
+            <li class="uniqe"><a href="{% url 'signin' %}">دخول</a></li>
+            <li class="uniqe"><a href="{% url 'signup' %}">تسجيل</a></li>
+            {%endif%}
+        </ul>
+    </nav>
+    <!--navbar ending-->
+    <!--navbar ending-->
+
+
+
+
+
+
+
+
+    <!-- meal details-->
+
+    <div class="cart_detail">
+       <div class="container">
+           <h2> تـأكيد الطلب</h2>
+
+           <div class="taking-sides">
+
+
+
+           <div class="bills">
+                <h2>تفـاصيل الدفـع</h2>
+                <div class="promo">
+                    <small>هل لديك رمز خصم ؟ </small><br>
+                    <form method="POST" action="{% url 'apply_coupon' %}">
+                        {% csrf_token %}
+                        <input type="text" placeholder="T1230" name="coupon_code" >
+                        <input type="submit" value="تطبيق"><br>
+                        {% if message %}
+                        {% if dic == None %}
+                        <small style="color:red">{{message}}</small>
+                        {% else %}
+                        <small style="color:red">{{message}}</small>
+                        <small style="color:red">بقيمة {{dic}}د.إ</small>
+                        {% endif%}
+                         {% endif%}
+                    </form>
+                </div>
+
+                <div class="billing">
+                    <p class="bilb">الطلب رقم:-</p>
+                    {% if request.user.is_superuser or pickup %}
+                    <p class="bilb">قيمة التوصيل : مجـاناً</p>
+                    {% else %}
+                    <p class="bilb">قيمة التوصيل : مجـاناً</p>
+
+                    {% endif %}
+                    <h3 class="nm" style="background-color: transparent;">المجـموع:           {{total}} د.إ</h3>
+                </div>
+                <form method="POST" action="{% url 'process_order' %}">
+                    {% csrf_token %}
+                    <input type="submit" value="تأكيد الطلب" class="vxc">
+
+                </form>
+
+           </div>
+
+
+        </div>
+       </div>
+    </div>
+
+    <!-- meal details-->
+
+    <!--footer -->
+
+         <!--footer start-->
+         <div class="footer">
+            <!--<div class="container">-->
+                <div class="taking-footer">
+
+                    <div class="taking-links">
+                        <a href="#">سياسة الخصوصية</a>
+                        <a href="#">تواصل معنـا </a>
+                        <a href="#">الشروط والأحكام </a>
+                        <a href="#"> الرئيـسية</a>
+                    </div>
+                    <div class="log">
+                        <img src="{% static 'images/tenten.png'%}" height="80px" width="80px"><br>
+                        <small>All Rights Reserved 2024<i class="fa-regular fa-copyright"></i></small>
+                      <br><small>Developed by Ahmd Babiker</small>
+                  </div>
+                </div>
+
+        </div>
+    <!--footer end-->
+    <!--footer -->
+
+
+
+
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+
+    <script>
+        $(document).on('click' , '.update-cart' , function(e){
+            e.preventDefault();
+            var productid = $(this).data('index')
+            $.ajax({
+                type : 'POST',
+                url: '{% url "cart_update" %}',
+                data : {
+                    product_id: $(this).data('index'),
+                    product_qty : $('#select' + productid + ' option:selected' ).text(),
+                    csrfmiddlewaretoken : '{{csrf_token}}',
+                    action : 'post'
+                },
+                success : function(json){
+                   location.reload()
+                },
+                error:function(xhr,errmsg , err){
+
+                }
+
+
+            });
+        })
+
+
+
+        //delete product
+
+
+
+        $(document).on('click' , '.delete-product' , function(e){
+            e.preventDefault();
+            //var productid = $(this).data('index')
+            $.ajax({
+                type : 'POST',
+                url: '{% url "cart_delete" %}',
+                data : {
+                    product_id: $(this).data('index'),
+                    csrfmiddlewaretoken : '{{csrf_token}}',
+                    action : 'post'
+                },
+                success : function(json){
+                   location.reload()
+                },
+                error:function(xhr,errmsg , err){
+
+                }
+
+
+            });
+        })
+
+
+
+
+        </script>
+
+
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

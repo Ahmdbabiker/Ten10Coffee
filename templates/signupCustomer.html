@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    
+
+
+
+    <form method="POST">
+        {% csrf_token %}
+
+        <input type="text" name="name">
+        <input type="number" name="phone">
+        <input type="email" name="email">
+        <select name="location">
+            <option value="A">أبوظبي</option>
+            <option value="B">العين</option>
+            <option value="C">عجمان</option>
+            <option value="D">دبي</option>
+            <option value="E">الفجيرة</option>
+            <option value="F">الشارقة</option>
+            <option value="J">راس الخيمة</option>
+            <option value="H">ام القيوين</option>
+        </select>
+        <input type="password" name="pass">
+        <input type="password" name="pass1">
+        <input type="submit">
+    </form>
+
+
+
+</body>
+</html>

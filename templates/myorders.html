@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@200..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Document</title>
+</head>
+<body dir="rtl">
+
+
+    <!--navbar start-->
+
+
+    <nav class="navbar">
+        <div class="logo">
+            <img src="images/ten.png" height="80px" width="80px">
+        </div>
+        <div class="tit">
+            <small>دومـاً, عشرة على 10</small>
+        </div>
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <ul class="nav-list">
+            <li><a href="#">الرئيسية</a></li>
+            <li><a href="#">المفضلة</a></li>
+            <li><a href="#">طلباتي</a></li>
+            <li><a href="#">السلة (0)</a></li>
+            <li class="uniqe"><a href="">دخول</a></li>
+        </ul>
+    </nav>
+    <!--navbar ending-->
+    
+
+
+
+
+
+    <!--orders -->
+
+    <div class="sandwiches">
+        <div class="container">
+            <h2>  طلبـاتي</h2>
+            <div class="taking-snadwiches" style="justify-content: right;">
+
+
+                 <div class="sand-product" style="margin: 8px 0;">
+                         <img src="images/10ten.ae_1720349103733-removebg-preview.png">
+                   
+                         <div class="description">
+                             <h4>فرايز بالموزاريلا</h4>
+                             <small class="dr">مشروبـات</small><br>
+                             <small> تم الطلب في 17/01/2030</small><br>
+                             <small> التقييـم :   4.5 / 5    <img src="star-empty-icon.png" style="width: 15px;height:15px"></small><br>
+                            <a href="#"> قيـم الوجبة</a>
+                             
+                         </div>
+                 </div>
+
+                 <div class="sand-product">
+                    <img src="images/10ten.ae_1720349103733-removebg-preview.png">
+              
+                    <div class="description">
+                        <h4>فرايز بالموزاريلا</h4>
+                        <small class="dr">مشروبـات</small><br>
+                        <small> تم الطلب في 17/01/2030</small><br>
+                        <small> التقييـم :   4.5 / 5    <img src="star-empty-icon.png" style="width: 15px;height:15px"></small><br>
+                       <a href="#"> قيـم الوجبة</a>
+                        
+                    </div>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!--orders-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+         <!--footer start-->
+         <div class="footer">
+            <!--<div class="container">-->
+                <div class="taking-footer">
+                   
+                    <div class="taking-links">
+                        <a href="{% url 'policy' %}">سياسة الخصوصية</a>
+                        <a href="{% url 'contactus' %}">تواصل معنـا </a>
+                        <a href="{% url 'terms' %}">الشروط والأحكام </a>
+                        <a href="{% url 'home' %}"> الرئيـسية</a>
+                    </div>
+                    <div class="log">
+                      <img src="images/ten.png" height="75px" width="75px"><br>
+                      <small>All Rights Reserved 2024<i class="fa-regular fa-copyright"></i></small>
+                      <br><small>Developed by Ahmd Babiker</small>
+                  </div>
+                </div>
+          
+        </div>
+    <!--footer end-->
+    <!--footer -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ <!-- footer navbar-->
+ <div class="foooter-nav">
+    <div class="container">
+        <div class="links">
+            <div class="link-tab">
+                <i class="fas fa-home"></i><br>
+                <small>الرئيسية </small>
+            </div>
+            <div class="link-tab">
+                <i class="fas fa-shopping-bag"></i><br>
+                <small>طلباتي </small>
+            </div>
+            <div class="link-tab">
+                <i class="fas fa-user"></i><br>
+                <small>حسابي </small>
+                
+            </div>
+            <div class="link-tab">
+                <i class="fas fa-shopping-cart"></i><br>
+                <small>سلة التسوق </small>
+            </div>
+           
+        </div>
+    </div>
+</div>
+
+<!-- footer navbar-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+
+// Get the footer navigation element
+var footerNav = document.querySelector('.foooter-nav');
+
+// Function to toggle visibility based on scroll position
+function toggleFooterNav() {
+if (window.scrollY > 100) { // Adjust scroll threshold as needed
+footerNav.classList.add('show');
+} else {
+footerNav.classList.remove('show');
+}
+}
+
+// Listen for scroll events and toggle footer navigation visibility
+window.addEventListener('scroll', toggleFooterNav);
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

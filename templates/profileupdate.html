@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <title>Profile Page</title>
+
+    <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
+
+    <!-- Custom Css -->
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+
+    <!-- FontAwesome 5 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
+</head>
+<body>
+    
+
+    <div class="update">
+        <div class="edit-profile">
+            <div class="container">
+                <form method="POST">
+                    {% csrf_token %}
+    
+                    <input type="text" placeholder="name" name="name" value="{{profile.name}}"><br>
+                    <input type="number" placeholder="number" name="phone" value="{{profile.phone_number}}"><br>
+                    <input type="text" placeholder="bio" name="bio" value="{{profile.bio}}"><br>
+                    <select name="activity">
+                        {% for activity in activity %}
+                        <option value="{{activity}}">{{activity}}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="submit"  value="تعديل"><br>
+    
+                </form>
+            </div>
+        </div>
+    
+        <hr>
+    
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <script type="text/javascript" src="{% static 'star-ratings/js/dist/star-ratings.min.js' %}"></script>
+
+    <script src="{% static 'js/app.js' %}"></script>
+    <script src="{% static 'js/cart.js' %}"></script>
+</body>
+</html>

@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@200..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Document</title>
+</head>
+<body dir="rtl">
+
+
+    <!--navbar start-->
+
+
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{% static 'images/tenten.png' %}" height="80px" width="80px">
+        </div>
+        <div class="tit">
+            <small>دومـاً, عشرة على 10</small>
+        </div>
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <ul class="nav-list">
+            <li><a href="{% url 'home' %}">الرئيسية</a></li>
+            <li><a href="{% url 'contact' %}">التواصل</a></li>
+            <li><a href="{% url 'cart_summary' %}">
+                السلة (<span id="cart_quantity"> {{cart|length}}</span>)
+            </a></li>
+            {% if request.user.is_authenticated %}
+
+            <li><a href="{% url 'edit_shiping_phone' request.user.id %}">{{request.user.username}}</a></li>
+            <li><a href="{% url 'signout' %}">خروج</a></li>
+            <li><a href="{% url 'myorders' request.user.id %}">طلباتي</a></li>
+            {%else%}
+            <li class="uniqe"><a href="{% url 'signin' %}">دخول</a></li>
+            <li class="uniqe"><a href="{% url 'signup' %}">تسجيل</a></li>
+            {%endif%}
+        </ul>
+    </nav>
+    <!--navbar ending-->
+
+
+
+    <div id="message-container">
+        {% for m in messages %}
+            <p class="messages">{{ m }}</p>
+        {% endfor %}
+    </div>
+
+    <!-- initiating -->
+
+    <div class="coverphoto">
+        <div class="container">
+           <div class="defintion">
+               <h2>الطعــمُ الأفضَـل علـى الإطلاق<br>في الهَـير</h2>
+               <small>نُقـدم أطبـاق المعكرونة و البطاطا المقلية <br> مع إضافات مميزة وسندوتشات البرجر وعـصائر مُنعشة والمزيد</small><br>
+               <a href="#">إستكشـف الآن</a>
+           </div>
+        </div>
+    </div>
+
+    <!-- initiating -->
+
+
+
+
+
+
+
+    <!-- svgs -->
+    <div class="svg">
+        <div class="container">
+           <div class="taking-svgs">
+               <div class="item">
+                   <img src="{% static 'images/pasta-icon.png' %}">
+               </div>
+               <div class="item">
+                <img src="{% static 'images/burger-icon.png' %}">
+            </div>
+            <div class="item">
+                <img src="{% static 'images/soda-with-straw-icon.png' %}">
+            </div>
+            <div class="item">
+                <img src="{% static 'images/french-fries-icon.png' %}">
+            </div>
+           </div>
+        </div>
+    </div>
+    <!-- svgs -->
+
+
+
+
+
+
+
+
+    <!-- most sold -->
+
+    <div class="most">
+        <div class="container">
+            <h2>الأكثر مبيعـاً <i class="fas fa-fire"></i>
+            </h2>
+            <small class="tryit">ننـصحك بتذوقه الآن</small>
+            <div class="taking-products">
+
+                {% for best in best %}
+                <div class="itemmost">
+                <a href="{% url 'meal_detail' best.slug %}">
+                <div class="product">
+                    <div class="im">
+                        <img src="{{best.image.url}}">
+                    </div>
+                    <div class="desc">
+                        <h2>{{best.name}} </h2>
+                        <small class="uniqe">{{best.tag}}</small><br>
+                        <small>المكونات :
+                             {{best.desc}}
+
+                        </small><br>
+                        <h1>{{best.price}} <small class="un">د . إ</small></h1>
+                    </div>
+                </div>
+                </a>
+            </div>
+                {% endfor %}
+
+            </div>
+        </div>
+    </div>
+    <!-- most sold -->
+
+
+
+
+
+
+    <!-- sandwiches -->
+       <div class="sandwiches">
+           <div class="container">
+               <h2>قائمـة الوجبـات</h2>
+               <small class="menn">برجـر , باستا, دجاج مقلي , بطـاطا مقلية و مشروبـات منعشة</small>
+               <div class="taking-snadwiches">
+
+                {% for product in all_products %}
+                    <div class="sand-product">
+                        <a href="{% url 'meal_detail' product.slug %}">
+                        <img src="{{product.image.url}}">
+                        <div class="description">
+                            <h4>{{product.name}} </h4>
+                            <small class="dr">{{product.tag}}</small><br>
+
+                            <small>المكونات : {{product.desc}}
+
+                            </small><br>
+                            <small style="color:#1a1a1a;margin:4px 0;display:inline-block;font-weight:500"> التقييـم :
+                                {% if product.average_rating %}
+                                   {{ product.average_rating|floatformat:1 }} / 5
+                                {% else %}
+
+                                     لا تقييمات بعد
+                                {% endif %}
+                            </small>
+                            <div class="fav" style="display: flex">
+                                <div class="prr">
+                                    <h3>{{product.price}} <small class="pr">د.إ</small></h3>
+                                </div>
+
+                            </div>
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+
+               </div>
+           </div>
+       </div>
+    <!-- sandwiches -->
+
+
+
+
+
+
+
+
+
+
+    <!--footer -->
+
+         <!--footer start-->
+         <div class="footer">
+            <!--<div class="container">-->
+                <div class="taking-footer">
+
+                    <div class="taking-links">
+                        <a href="#">سياسة الخصوصية</a>
+                        <a href="#">تواصل معنـا </a>
+                        <a href="#">الشروط والأحكام </a>
+                        <a href="#"> الرئيـسية</a>
+                    </div>
+                    <div class="log">
+                      <img src="{% static 'images/tenten.png' %}" height="75px" width="75px"><br>
+                      <small>All Rights Reserved 2024<i class="fa-regular fa-copyright"></i></small>
+                      <br><small>Developed by Ahmd Babiker</small>
+                  </div>
+                </div>
+
+        </div>
+    <!--footer end-->
+    <!--footer -->
+
+
+
+
+
+
+
+    <!-- footer navbar-->
+    <div class="foooter-nav">
+        <div class="container">
+            <div class="links" style="padding: 12px 16px;">
+                <div class="link-tab">
+                    <a href="{% url 'home' %}" style="color: black;">
+                    <i class="fas fa-home"></i><br>
+                    <small>الرئيسية </small>
+                    </a>
+                </div>
+
+
+                <div class="link-tab">
+                    <a href="{% url 'contact' %}" style="color: black;">
+                    <i class="fas fa-envelope"></i><br>
+                    <small>التواصل </small>
+                    </a>
+                </div>
+
+
+                <div class="link-tab">
+
+                    {% if request.user.is_authenticated%}
+                    <a href="{% url 'edit_shiping_phone' request.user.id %}" style="color:black">
+                    <i class="fas fa-user"></i><br>
+                    <small>{{user.username|truncatechars:7}}</small>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'signin' %}"  style="color: black;">
+                    <i class="fas fa-user"></i><br>
+                    <small>الحساب  </small>
+                     </a>
+                    {% endif%}
+                </div>
+                {% if request.user.is_authenticated %}
+
+                <div class="link-tab">
+                    <a href="{% url 'myorders' request.user.id %}" style="color: black;">
+                    <i class="fas fa-shopping-bag"></i><br>
+                    <small>الطلبات السابقة </small>
+                    </a>
+                </div>
+
+
+                <div class="link-tab">
+                    <a href="{% url 'signout' %}" style="color: rgb(105, 104, 104);">
+                    <i class="fas fa-sign-out-alt"></i><br>
+                    <small>خروج </small>
+                    </a>
+                </div>
+                {% endif%}
+                <div class="link-tab">
+                    <a href="{% url 'cart_summary' %}" style="color: black;">
+                    <i class="fas fa-shopping-cart"></i><br>
+                    <small>
+                        السلة </span>
+                    </a> </small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+<!-- footer navbar-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+
+    // Get the footer navigation element
+var footerNav = document.querySelector('.foooter-nav');
+
+// Function to toggle visibility based on scroll position
+function toggleFooterNav() {
+    if (window.scrollY > 100) { // Adjust scroll threshold as needed
+        footerNav.classList.add('show');
+    } else {
+        footerNav.classList.remove('show');
+    }
+}
+
+// Listen for scroll events and toggle footer navigation visibility
+window.addEventListener('scroll', toggleFooterNav);
+</script>
+
+<script>
+    // Function to show messages for 3 seconds
+    function showMessages() {
+        const messages = document.querySelectorAll('.messages');
+        messages.forEach((msg, index) => {
+            // Show the message after a delay
+            setTimeout(() => {
+                msg.style.display = 'block'; // Show the message
+                // Hide the message after 3 seconds
+                setTimeout(() => {
+                    msg.style.display = 'none'; // Hide after 3 seconds
+                }, 3000);
+            }, index * 3000); // Stagger messages by 3 seconds
+        });
+    }
+
+    // Call the function to display messages
+    showMessages();
+</script>
+
+
+
+
+
+<script>
+
+    //check if button pressed
+    $(document).on('click' , '#add-cart' , function(e){
+        e.preventDefault();
+        $.ajax({
+            type : 'POST',
+            url: '{% url "cart_add" %}',
+            data : {
+                product_id: $('#add-cart').val(),
+                product_qty : $('#qty-cart option:selected').text(),
+                csrfmiddlewaretoken : '{{csrf_token}}',
+                action : 'post'
+            },
+            success : function(json){
+               console.log(json)
+               document.getElementById("cart_quantity").textContent = json.quantity
+            },
+            error:function(xhr,errmsg , err){
+
+            }
+
+
+        });
+    })
+
+</script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!--
+ <div class="coverphoto">
+        <div class="container">
+            <div class="image">
+                <img src="tenten.png">
+            </div>
+            <div class="paragraph">
+                <h1>ندعوك لتذوق <br>الطعـم الأفضل على الإطلاق</h1>
+
+                <small>دومـاً, عشره على عشره</small><br>
+                <a href="#">إستكشـف الآن</a>
+            </div>
+        </div>
+    </div>
+
+-->

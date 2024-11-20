@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@200..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Document</title>
+</head>
+<body dir="rtl">
+
+
+    <!--navbar start-->
+
+
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{% static 'images/tenten.png' %}" height="80px" width="80px">
+        </div>
+        <div class="tit">
+            <small>دومـاً, عشرة على 10</small>
+        </div>
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <ul class="nav-list">
+            <li><a href="#">الرئيسية</a></li>
+            <li><a href="#">التواصل</a></li>
+            <li><a href="{% url 'cart_summary' %}">
+                السلة (<span id="cart_quantity"> {{cart|length}}</span>)
+            </a></li>
+            {% if request.user.is_authenticated %}
+
+            <li><a href="#">{{request.user.username}}</a></li>
+            <li><a href="{% url 'signout' %}">خروج</a></li>
+            <li><a href="{% url 'myorders' request.user.id %}">طلباتي</a></li>
+            {%else%}
+            <li class="uniqe"><a href="{% url 'signin' %}">دخول</a></li>
+            <li class="uniqe"><a href="{% url 'signup' %}">تسجيل</a></li>
+            {%endif%}
+        </ul>
+    </nav>
+    <!--navbar ending-->
+
+
+
+
+
+<div class="order_done" style="text-align: center; margin:120px auto ;">
+    <h2>لقد تم تأكيد طلبك</h2>
+    <small>رقم طلـبك هو </small>
+    <h1>{{order_id}}</h1>
+
+   {% if request.user.is_authenticated %}
+    {% if request.session.user_data.pickup %}
+        <p style="font-weight:500;font-size:14px">ملاحظة مهمة : <br>يرجى أخذ لقطـة للشـاشة أو قم بتذكر رقم طلبك</p>
+        <br>
+    {% else %}
+        <a href="{{ whatsapp_link }}" style="color:red">إضغط هنا لترسل إلينا موقعك الحالي</a><br>
+    {% endif %}
+{% elif request.session.unknown_user.pickup %}
+    <p style="font-weight:500;font-size:14px">ملاحظة مهمة : <br>يرجى أخذ لقطـة للشـاشة أو قم بتذكر رقم طلبك</p>
+    <br>
+{% else %}
+    <a href="{{ whatsapp_link }}" style="color:red">إضغط هنا لترسل إلينا موقعك الحالي</a><br>
+{% endif %}
+
+<a href="{% url 'home' %}" style="color: rgb(46, 46, 46);">العودة إلى الصفحة الرئيسية</a>
+
+
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!-- footer navbar-->
+    <div class="foooter-nav">
+        <div class="container">
+            <div class="links">
+                <div class="link-tab">
+                    <i class="fas fa-home"></i><br>
+                    <small>الرئيسية </small>
+                </div>
+
+                <div class="link-tab">
+                    <i class="fas fa-user"></i><br>
+                    {% if request.user.is_authenticated%}
+                    <small>{{user.username}}</small>
+                    {% else %}
+                    <a href="{% url 'signin' %}"  style="color: rgb(105, 104, 104);"><small>إنشاء حساب | دخول  </small></a>
+                    {% endif%}
+                </div>
+                {% if request.user.is_authenticated %}
+
+                <div class="link-tab">
+                    <a href="{% url 'myorders' request.user.id %}" style="color: black;">
+                    <i class="fas fa-shopping-bag"></i><br>
+                    <small>طلباتي </small>
+                    </a>
+                </div>
+
+
+                <div class="link-tab">
+                    <a href="{% url 'signout' %}">
+                    <i class="fas fa-sign-out-alt"></i><br>
+                    <small>خروج </small>
+                    </a>
+                </div>
+                {% endif%}
+                <div class="link-tab">
+                    <a href="{% url 'cart_summary' %}">
+                    <i class="fas fa-shopping-cart"></i><br>
+                    <small>
+                        السلة (<span id="cart_quantity"> {{cart|length}}</span>)
+                    </a> </small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+<!-- footer navbar-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>

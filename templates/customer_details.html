@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@200..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <title>Document</title>
+</head>
+<body dir="rtl">
+
+
+    <!--navbar start-->
+
+
+
+
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{% static 'images/tenten.png' %}" height="80px" width="80px">
+        </div>
+        <div class="tit">
+            <small>دومـاً, عشرة على 10</small>
+        </div>
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <ul class="nav-list">
+            <li><a href="{% url 'home' %}">الرئيسية</a></li>
+            <li><a href="{% url 'contact' %}">التواصل</a></li>
+            <li><a href="{% url 'cart_summary' %}">
+                السلة (<span id="cart_quantity"> {{cart|length}}</span>)
+            </a></li>
+            {% if request.user.is_authenticated %}
+
+            <li><a href="#">{{request.user.username}}</a></li>
+            <li><a href="{% url 'signout' %}">خروج</a></li>
+            {%else%}
+            <li class="uniqe"><a href="{% url 'signin' %}">دخول</a></li>
+            <li class="uniqe"><a href="{% url 'signup' %}">تسجيل</a></li>
+            {%endif%}
+        </ul>
+    </nav>
+    <!--navbar ending-->
+    <!--navbar ending-->
+
+
+    <!-- shipping and payment -->
+
+    <div class="shipping">
+        <div class="container">
+
+            <div class="shipping-bill">
+
+
+                <div class="bills">
+
+                    <div class="promo">
+                        <h2>تفـاصيل طلبـك</h2>
+                        {% for product in cart_products %}
+                       <small> {{product.name}} </small>
+                       <small>x
+                        {% for key, value in quantities.items %}
+                            {% if key == product.id|slugify %}
+                            {{ value.quantity }},
+                            {% endif %}
+                        {% endfor %}</small>
+
+
+
+
+
+
+                       {% endfor %}
+
+                    </div>
+
+
+
+               </div>
+
+
+            <div class="ship-forms">
+                <h2> العنوان ورقم الهاتف</h2>
+                <form method="POST" action="{% url 'billing' %}">
+                    {% csrf_token %}
+                    <label>الإسـم </label>
+                    <input type="text" name="name" required value="{{user_data.user.username}}" {% if user.is_authenticated %} readonly {% endif%}>
+                    <label>رقم الهاتف</label>
+                    <input type="number" required placeholder="01234567" name="phoneno"  {% if user.is_authenticated %} readonly {% endif%} value="{{user_data.phone_number}}">
+                    <label>العنوان</label>
+                    <input type="text" name="address" required  {% if user.is_authenticated %} readonly {% endif%} value="{{user_data.address}}">
+
+                <div class="lbel">
+                    <label for="pickup">إستلام من المحل ؟ </label>
+                    {% if request.user.is_superuser or request.user.is_staff %}
+                    <input type="checkbox" name="pickup" value="yes" id="mjk" checked disabled>
+                    {%else%}
+                    <input type="checkbox" name="pickup" value="yes" id="mjk">
+                    {%endif%}
+
+                </div>
+
+                    <input type="submit" value=" تأكيد البيانات" id="nbv">
+                    {% if user.is_authenticated %}
+
+                    <a href="{% url 'edit_shiping_phone' user_data.id  %}" style="color: rgb(212, 41, 41);font-size: 19px;">تعديل البيانات</a><br>
+                    {% endif %}
+
+                </form>
+            </div>
+
+        </div>
+
+        </div>
+    </div>
+    <!-- shipping and payment-->
+
+
+
+
+    <!--footer -->
+
+         <!--footer start-->
+         <div class="footer">
+            <!--<div class="container">-->
+                <div class="taking-footer">
+
+                    <div class="taking-links">
+                        <a href="#">سياسة الخصوصية</a>
+                        <a href="#">تواصل معنـا </a>
+                        <a href="#">الشروط والأحكام </a>
+                        <a href="#"> الرئيـسية</a>
+                    </div>
+                    <div class="log">
+                        <img src="{% static 'images/tenten.png'%}" height="80px" width="80px"><br>
+                        <small>All Rights Reserved 2024<i class="fa-regular fa-copyright"></i></small>
+                      <br><small>Developed by Ahmd Babiker</small>
+                  </div>
+                </div>
+
+        </div>
+    <!--footer end-->
+    <!--footer -->
+
+
+
+<script>
+
+
+</script>
+
+
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

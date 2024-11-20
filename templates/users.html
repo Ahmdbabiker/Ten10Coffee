@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@200..800&display=swap" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body dir="rtl">
+
+
+    <!--navbar start-->
+
+
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{% static 'images/tenten.png'%}" height="80px" width="80px">
+        </div>
+        <div class="tit">
+            <small>دومـاً, عشرة على 10</small>
+        </div>
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <ul class="nav-list">
+            <li><a href="#">الرئيسية</a></li>
+            <li><a href="#">المفضلة</a></li>
+            <li><a href="#">طلباتي</a></li>
+            <li><a href="{% url 'cart_summary' %}">
+                السلة (<span id="cart_quantity"> {{cart|length}}</span>)
+            </a></li>
+            <li class="uniqe"><a href="">دخول</a></li>
+        </ul>
+    </nav>
+    <!--navbar ending-->
+
+     <div id="message-container">
+        {% for m in messages %}
+            <p class="messages">{{ m }}</p>
+        {% endfor %}
+    </div>
+
+
+
+    <div class="users">
+        <div class="container">
+            <h2>جميع المستخدمين</h2>
+
+            <div class="all-users">
+
+
+                 <table>
+            <thead>
+                <tr>
+                    <th> رقم</th>
+                    <th>إسم المستخدم</th>
+                    <th>رقم الهاتف</th>
+                    <th> العنوان</th>
+                </tr>
+            </thead>
+            <tbody>
+               {% for user in users%}
+                <tr>
+                    <td>{{user.user.id}}</td>
+                    <td>{{user.user.username}}</td>
+                    <td>{{user.phone_number}}</td>
+                    <td>{{user.address}}</td>
+
+                </tr>
+                {% endfor%}
+
+            </tbody>
+        </table>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <!--footer -->
+
+         <!--footer start-->
+         <div class="footer">
+            <!--<div class="container">-->
+                <div class="taking-footer">
+
+                    <div class="taking-links">
+                        <a href="">سياسة الخصوصية</a>
+                        <a href="">تواصل معنـا </a>
+                        <a href="">الشروط والأحكام </a>
+                        <a href=""> الرئيـسية</a>
+                    </div>
+                    <div class="log">
+                      <img src="{% static 'images/tenten.png' %}" height="75px" width="75px"><br>
+                      <small>All Rights Reserved 2024<i class="fa-regular fa-copyright"></i></small>
+                      <br><small>Developed by Ahmd Babiker</small>
+                  </div>
+                </div>
+
+        </div>
+    <!--footer end-->
+    <!--footer -->
+
+
+
+
+
+
+    <!-- footer navbar-->
+    <div class="foooter-nav">
+        <div class="container">
+            <div class="links">
+                <div class="link-tab">
+                    <i class="fas fa-home"></i><br>
+                    <small>الرئيسية </small>
+                </div>
+                <div class="link-tab">
+                    <i class="fas fa-shopping-bag"></i><br>
+                    <small>طلباتي </small>
+                </div>
+                <div class="link-tab">
+                    <i class="fas fa-user"></i><br>
+                    <small>حسابي </small>
+
+                </div>
+                <div class="link-tab">
+                    <i class="fas fa-shopping-cart"></i><br>
+                    <small>سلة التسوق </small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+<!-- footer navbar-->
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@200..800&display=swap" rel="stylesheet">
+    <title>Document</title>
+</head>
+<body dir="rtl">
+
+
+    <!--navbar start-->
+
+
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{% static 'images/tenten.png' %}" height="80px" width="80px">
+        </div>
+        <div class="tit">
+            <small>دومـاً, عشرة على 10</small>
+        </div>
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <ul class="nav-list">
+            <li><a href="{% url 'home' %}">الرئيسية</a></li>
+            <li><a href="{% url 'contact' %}">التواصل</a></li>
+            <li><a href="{% url 'cart_summary' %}">
+                السلة (<span id="cart_quantity"> {{cart|length}}</span>)
+            </a></li>
+            {% if request.user.is_authenticated %}
+
+            <li><a href="#">{{request.user.username}}</a></li>
+            <li><a href="{% url 'signout' %}">خروج</a></li>
+            {%else%}
+            <li class="uniqe"><a href="{% url 'signin' %}">دخول</a></li>
+            <li class="uniqe"><a href="{% url 'signup' %}">تسجيل</a></li>
+            {%endif%}
+        </ul>
+    </nav>
+    <!--navbar ending-->
+
+    <div id="message-container">
+        {% for m in messages %}
+            <p class="messages">{{ m }}</p>
+        {% endfor %}
+    </div>
+
+
+
+
+
+
+    <!-- meal details-->
+
+        <div class="meal-detail">
+            <div class="container">
+                <div class="taking-two-sides">
+                    <div class="meal-photo">
+                        <img src="{{meal_details.image.url}}">
+                    </div>
+                    <div class="meal_desc">
+                        <h2>{{meal_details.name}}</h2>
+                        <small class="tag">{{meal_details.tag}}</small><br>
+                        <small class="rate"> التقييـم :
+                                {% if rate %}
+                                    {{avg_rate}} / 5 من {{count_rating}} تقييم
+
+                                {% else %}
+                                    لا تقييم بعد
+                                {% endif %}
+                        <p>المكونـات:</p>
+                        <p class="ingre">
+                            {{meal_details.desc}}
+                        </p>
+                       <div class="add-price">
+                           <div class="price">
+                               <h1>{{meal_details.price}} <small class="sml">د.إ</small></h1>
+                           </div>
+                           <div class="addd">
+
+
+
+            <select id="qty-cart">
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+            </select>
+
+
+
+            <button value="{{meal_details.id}}" id="add-cart">أضف إلى السلة</button>
+            <a href="{% url 'cart_summary' %}" id="cart-icon" style="display:none;"><i class="fas fa-shopping-cart"></i></a>
+
+                           </div>
+                       </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    <!-- meal details-->
+
+
+
+
+
+    <!-- rating -->
+
+        <div class="cust-rate">
+            <div class="container">
+                <h2>آراء العملاء عن هذه الوجبة</h2>
+                <small class="allr">التقييـم :
+                    {% if rate %}
+                    {{avg_rate}} / 5 من {{count_rating}} تقييم
+                    {% else %}
+                    لا تقييم بعد
+                    {% endif %}
+                </small>
+            <div class="taking-rating">
+                {% if rate %}
+            {% for rate in rate %}
+                <div class="rate-div">
+                    <div class="use-png">
+                        <img src="{% static 'images/user.png' %}">
+                    </div>
+                    <div class="comment_details">
+                        <p class="name"> {{rate.user_rated}}</p>
+
+                        <small class="rta">
+                            التقييـم : {{rate.rate}}
+                        </small>
+                        <p>
+                            {{rate.comment}}
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+            {% else %}
+
+            <div class="comm" style="margin:35px 0;text-align:center">
+                <i class="fa-regular fa-comments" style="font-size:45px;color:lightgray"></i><br>
+                <small style="font-size:30px;color:gray">لا تعليقـات حتى الآن</small>
+
+
+            </div>
+
+            {% endif %}
+            </div>
+
+            <form method="POST"  >
+                {% csrf_token %}
+                <h2>اُترك تعليقك هنا</h2>
+                <small>رأيـك يهمنا</small><br>
+                <select name="rate">
+                    <option value="1">سيء جداً</option>
+                    <option value="2">سيء</option>
+                    <option value="3">جيد</option>
+                    <option value="4">جيد جداً</option>
+                    <option value="5" selected>ممتاز</option>
+                </select><br>
+                <textarea name="comment" placeholder="اُكتب تعليقك هنا "></textarea><br>
+                <input type="submit" value="تعليق" id="nmn">
+            </form>
+
+            </div>
+        </div>
+
+
+    <!-- rating -->
+
+
+
+       <!-- sandwiches -->
+       <div class="sandwiches">
+        <div class="container">
+            <h2> شـاهد أيضـاً</h2>
+            <div class="taking-snadwiches">
+
+                {% for product in similar%}
+                 <div class="sand-product">
+                        <a href="{% url 'meal_detail' product.slug %}">
+                         <img src="{{product.image.url}}">
+
+                         <div class="description">
+                             <h4> {{product.name}}</h4>
+                             <small class="dr">{{product.tag}}</small><br>
+                             <small>المكونات : {{product.desc}}
+                            <small><br>
+                                التقييـم  :
+                                {% if product.average_rating %}
+                                {{ product.average_rating|floatformat:1 }} / 5
+                                {% else %}
+
+                                  لا تقييمات بعد
+                                {% endif %}
+                            </small>
+                             </small><br>
+
+                             <div class="fav" style="display: flex">
+                                 <div class="prr">
+                                     <h3>{{product.price}} <small class="pr">د.إ</small></h3>
+                                 </div>
+
+                             </div>
+                         </div>
+                        </a>
+                 </div>
+                 {% endfor %}
+            </div>
+        </div>
+    </div>
+ <!-- sandwiches -->
+
+
+
+
+    <!--footer -->
+
+         <!--footer start-->
+         <div class="footer">
+            <!--<div class="container">-->
+                <div class="taking-footer">
+
+                    <div class="taking-links">
+                        <a href="">سياسة الخصوصية</a>
+                        <a href="">تواصل معنـا </a>
+                        <a href="">الشروط والأحكام </a>
+                        <a href=""> الرئيـسية</a>
+                    </div>
+                    <div class="log">
+                      <img src="{% static 'images/tenten.png' %}" height="75px" width="75px"><br>
+                      <small>All Rights Reserved 2024<i class="fa-regular fa-copyright"></i></small>
+                      <br><small>Developed by Ahmd Babiker</small>
+                  </div>
+                </div>
+
+        </div>
+    <!--footer end-->
+    <!--footer -->
+
+
+
+
+
+ <!-- footer navbar-->
+    <div class="foooter-nav">
+        <div class="container">
+            <div class="links" style="padding: 12px 16px;">
+                <div class="link-tab">
+                    <a href="{% url 'home' %}" style="color: black;">
+                    <i class="fas fa-home"></i><br>
+                    <small>الرئيسية </small>
+                    </a>
+                </div>
+
+
+                <div class="link-tab">
+                    <a href="{% url 'contact' %}" style="color: black;">
+                    <i class="fas fa-envelope"></i><br>
+                    <small>التواصل </small>
+                    </a>
+                </div>
+
+
+                <div class="link-tab">
+
+                    {% if request.user.is_authenticated%}
+                    <a href="{% url 'edit_shiping_phone' request.user.id %}" style="color:black">
+                    <i class="fas fa-user"></i><br>
+                    <small>{{user.username|truncatechars:7}}</small>
+                    </a>
+                    {% else %}
+                    <a href="{% url 'signin' %}"  style="color: black;">
+                    <i class="fas fa-user"></i><br>
+                    <small>الحساب  </small>
+                     </a>
+                    {% endif%}
+                </div>
+                {% if request.user.is_authenticated %}
+
+                <div class="link-tab">
+                    <a href="{% url 'myorders' request.user.id %}" style="color: black;">
+                    <i class="fas fa-shopping-bag"></i><br>
+                    <small>الطلبات السابقة </small>
+                    </a>
+                </div>
+
+
+                <div class="link-tab">
+                    <a href="{% url 'signout' %}" style="color: rgb(105, 104, 104);">
+                    <i class="fas fa-sign-out-alt"></i><br>
+                    <small>خروج </small>
+                    </a>
+                </div>
+                {% endif%}
+                <div class="link-tab">
+                    <a href="{% url 'cart_summary' %}" style="color: black;">
+                    <i class="fas fa-shopping-cart"></i><br>
+                    <small>
+                        السلة </span>
+                    </a> </small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+<!-- footer navbar-->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js" integrity="sha512-v2CJ7UaYy4JwqLDIrZUI/4hqeoQieOmAZNXBeQyjo21dadnwR+8ZaIJVT8EE2iyI61OV8e6M8PP2/4hpQINQ/g==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+
+    // Get the footer navigation element
+var footerNav = document.querySelector('.foooter-nav');
+
+// Function to toggle visibility based on scroll position
+function toggleFooterNav() {
+    if (window.scrollY > 100) { // Adjust scroll threshold as needed
+        footerNav.classList.add('show');
+    } else {
+        footerNav.classList.remove('show');
+    }
+}
+
+// Listen for scroll events and toggle footer navigation visibility
+window.addEventListener('scroll', toggleFooterNav);
+</script>
+
+
+
+
+<script>
+    // Function to show messages for 3 seconds
+    function showMessages() {
+        const messages = document.querySelectorAll('.messages');
+        messages.forEach((msg, index) => {
+            // Show the message after a delay
+            setTimeout(() => {
+                msg.style.display = 'block'; // Show the message
+                // Hide the message after 3 seconds
+                setTimeout(() => {
+                    msg.style.display = 'none'; // Hide after 3 seconds
+                }, 3000);
+            }, index * 3000); // Stagger messages by 3 seconds
+        });
+    }
+
+    // Call the function to display messages
+    showMessages();
+</script>
+
+
+
+<script>
+const addButton = document.getElementById('add-cart');
+const cartIcon = document.getElementById('cart-icon');
+const message = document.getElementById('message');
+
+// Check localStorage for cart status
+if (localStorage.getItem('cartHasItems') === 'true') {
+    cartIcon.style.display = 'block';
+}
+
+// Function to show the message
+function showMessage() {
+    message.style.display = 'block';
+    setTimeout(() => {
+        message.style.display = 'none';
+    }, 3000); // Hide after 3 seconds
+}
+
+addButton.addEventListener('click', function() {
+    // Show the cart icon
+    cartIcon.style.display = 'block';
+    cartIcon.style.opacity = '1'; // Fade in
+
+    // Update localStorage
+    localStorage.setItem('cartHasItems', 'true');
+
+    // Show the message
+    showMessage();
+});
+</script>
+
+
+
+<script>
+
+    //check if button pressed
+    $(document).on('click' , '#add-cart' , function(e){
+        e.preventDefault();
+        $.ajax({
+            type : 'POST',
+            url: '{% url "cart_add" %}',
+            data : {
+                product_id: $('#add-cart').val(),
+                product_qty : $('#qty-cart option:selected').text(),
+                csrfmiddlewaretoken : '{{csrf_token}}',
+                action : 'post'
+            },
+            success : function(json){
+               console.log(json)
+               document.getElementById("cart_quantity").textContent = json.quantity
+            },
+            error:function(xhr,errmsg , err){
+
+            }
+
+
+        });
+    })
+
+</script>
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

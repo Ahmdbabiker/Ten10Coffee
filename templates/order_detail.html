@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@200..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <title>Document</title>
+</head>
+<body dir="rtl">
+
+
+    <!--navbar start-->
+
+
+
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{% static 'images/tenten.png' %}" height="80px" width="80px">
+        </div>
+        <div class="tit">
+            <small>دومـاً, عشرة على 10</small>
+        </div>
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <ul class="nav-list">
+            <li><a href="#">الرئيسية</a></li>
+            <li><a href="#">التواصل</a></li>
+            <li><a href="{% url 'cart_summary' %}">
+                السلة (<span id="cart_quantity"> {{cart|length}}</span>)
+            </a></li>
+            {% if request.user.is_authenticated %}
+
+            <li><a href="#">{{request.user.username}}</a></li>
+            <li><a href="{% url 'signout' %}">خروج</a></li>
+            {%else%}
+            <li class="uniqe"><a href="{% url 'signin' %}">دخول</a></li>
+            <li class="uniqe"><a href="{% url 'signup' %}">تسجيل</a></li>
+            {%endif%}
+        </ul>
+    </nav>
+    <!--navbar ending-->
+    <!--navbar ending-->
+
+          <!-- sandwiches -->
+     <div class="sandwiches">
+        <div class="container">
+            <h3>بيانات العميل : </h3>
+            <p>رقم الطلب : {{order.id}}</p>
+            <p>اسم المستخدم :
+                 {% if order.user == None %}
+                  {{order.unknown_user}} (مستخدم غير مسجل على النظام)
+                {% else %}
+                {{order.user}}
+                {% endif %}
+                </p>
+                {% if order.user.is_superuser or order.user.is_staff %}
+                <p>طلب سيارة</p>
+                {% endif %}
+            <p>العنوان : {{order.shipping_address}}</p>
+            <p>المبلغ المستحق : {{order.amount_paid}} د.إ</p>
+            <p>رقم الهاتف : {{order.phone_number}}</p>
+            <p> إستلام من المحل ؟
+                {% if order.user.is_superuser or order.user.is_staff %}
+                    <small>------------</small>
+                {% else %}
+
+                 {% if order.pickup %}
+                نعم
+                {% else %}
+                لا , توصيل للمنزل
+                {% endif %}
+
+                {%endif%}
+            </p>
+
+
+            <div class="taking-snadwiches">
+
+             {% for product in order_item %}
+                 <div class="sand-product">
+                     <a href="#">
+                     <img src="{{product.product.image.url}}">
+                     <div class="description">
+                         <h4>{{product.product.name}} </h4>
+                         <small class="dr">{{product.product.tag}}</small><br>
+
+                        </a>
+                         </small><br>
+
+                         <div class="fav" style="display: flex">
+                             <div class="prr">
+                                 <h4>{{product.price}} <small class="pr">د.إ</small></h4>
+                                <h4>الكمية : {{product.quantity}}</h4>
+                                </div>
+
+                         </div>
+
+                     </div>
+                 </div>
+                 {% endfor %}
+
+
+
+            </div>
+        </div>
+    </div>
+ <!-- sand
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <!--footer -->
+
+         <!--footer start-->
+         <div class="footer">
+            <!--<div class="container">-->
+                <div class="taking-footer">
+
+                    <div class="taking-links">
+                        <a href="">سياسة الخصوصية</a>
+                        <a href="">تواصل معنـا </a>
+                        <a href="">الشروط والأحكام </a>
+                        <a href=""> الرئيـسية</a>
+                    </div>
+                    <div class="log">
+                      <img src="{% static 'images/tenten.png' %}" height="75px" width="75px"><br>
+                      <small>All Rights Reserved 2024<i class="fa-regular fa-copyright"></i></small>
+                      <br><small>Developed by Ahmd Babiker</small>
+                  </div>
+                </div>
+
+        </div>
+    <!--footer end-->
+    <!--footer -->
+
+
+
+
+
+
+    <!-- footer navbar-->
+    <div class="foooter-nav">
+        <div class="container">
+            <div class="links">
+                <div class="link-tab">
+                    <i class="fas fa-home"></i><br>
+                    <small>الرئيسية </small>
+                </div>
+                <div class="link-tab">
+                    <i class="fas fa-shopping-bag"></i><br>
+                    <small>طلباتي </small>
+                </div>
+                <div class="link-tab">
+                    <i class="fas fa-user"></i><br>
+                    {% if request.user.is_authenticated%}
+                    <small>{{user.username}}</small>
+                    {% else %}
+                    <a href="{% url 'signin' %}"  style="color: rgb(105, 104, 104);"><small>إنشاء حساب | دخول  </small></a>
+                    {% endif%}
+                </div>
+                {% if request.user.is_authenticated %}
+                <div class="link-tab">
+                    <a href="{% url 'signout' %}" style="color: rgb(105, 104, 104);">
+                    <i class="fas fa-sign-out-alt"></i><br>
+                    <small>خروج </small>
+                    </a>
+                </div>
+                {% endif%}
+                <div class="link-tab">
+                    <i class="fas fa-shopping-cart"></i><br>
+                    <small> <a href="{% url 'cart_summary' %}"  style="color: black;">
+                        السلة (<span id="cart_quantity"> {{cart|length}}</span>)
+                    </a> </small>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

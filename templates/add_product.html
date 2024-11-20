@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Changa:wght@200..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+    <title>Document</title>
+</head>
+<body dir="rtl">
+
+
+    <!--navbar start-->
+
+
+    <nav class="navbar">
+        <div class="logo">
+            <img src="{% static 'images/tenten.png'%}" height="80px" width="80px">
+        </div>
+        <div class="tit">
+            <small>دومـاً, عشرة على 10</small>
+        </div>
+        <div class="menu-toggle" id="mobile-menu">
+            <span class="bar"></span>
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </div>
+        <ul class="nav-list">
+            <li><a href="#">الرئيسية</a></li>
+            <li><a href="#">المفضلة</a></li>
+            <li><a href="#">طلباتي</a></li>
+            <li><a href="{% url 'cart_summary' %}">
+                السلة (<span id="cart_quantity"> {{cart|length}}</span>)
+            </a></li>
+            <li class="uniqe"><a href="">دخول</a></li>
+        </ul>
+    </nav>
+    <!--navbar ending-->
+
+
+    <div class="login">
+        <div class="container">
+            <h2> إضافة وجبـة</h2>
+            <div class="title-form">
+                <form method="POST" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label>إسم الوجبة</label><br>
+                    <input type="text" name="name" required><br>
+                    <label> مكونات الوجبة</label><br>
+                    <input type="text" name="desc" required><br>
+                    <label> السعـر</label><br>
+                    <input type="number" name="price" step="0.01" required><br>
+                    <label> صورة الوجبة</label><br>
+                    <input type="file" name="image"><br>
+                    <select name="tag">
+                        <option value="1">المشروبات</option>
+                        <option value="2">السندوتشات</option>
+                        <option value="3">اخرى</option>
+                    </select><br>
+                    <input type="submit" class="login" value="إضافة" style="cursor: pointer;">
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+
+
+    <!--footer -->
+
+         <!--footer start-->
+         <div class="footer">
+            <!--<div class="container">-->
+                <div class="taking-footer">
+
+                    <div class="taking-links">
+                        <a href="">سياسة الخصوصية</a>
+                        <a href="">تواصل معنـا </a>
+                        <a href="">الشروط والأحكام </a>
+                        <a href=""> الرئيـسية</a>
+                    </div>
+                    <div class="log">
+                      <img src="{% static 'images/tenten.png' %}" height="75px" width="75px"><br>
+                      <small>All Rights Reserved 2024<i class="fa-regular fa-copyright"></i></small>
+                      <br><small>Developed by Ahmd Babiker</small>
+                  </div>
+                </div>
+
+        </div>
+    <!--footer end-->
+    <!--footer -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
