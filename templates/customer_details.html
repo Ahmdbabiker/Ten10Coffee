@@ -56,45 +56,43 @@
 <div class="shipping">
     <div class="container">
         <div class="shipping-bill">
-            
-
-            <!-- User Shipping Information -->
-            <div class="ship-forms">
-                <h2>العنوان ورقم الهاتف</h2>
-                <label>الإسم</label>
-                <input type="text" name="name" required value="{{ user_data.user.username }}" {% if user.is_authenticated %} readonly {% endif %}>
-                
-                <label>رقم الهاتف</label>
-                <input type="number" required placeholder="01234567" name="phoneno" {% if user.is_authenticated %} readonly {% endif %} value="{{ user_data.phone_number }}">
-                
-                <label>العنوان</label>
-                <input type="text" name="address" required {% if user.is_authenticated %} readonly {% endif %} value="{{ user_data.address }}">
-
-                <!-- Pickup Option -->
-                <div class="lbel">
-                    <label for="pickup">إستلام من المحل؟</label>
-                    {% if request.user.is_superuser or request.user.is_staff %}
-                        <input type="checkbox" name="pickup" value="yes" id="mjk" checked disabled>
-                    {% else %}
-                        <input type="checkbox" name="pickup" value="yes" id="mjk">
-                    {% endif %}
-                </div>
-
-                <!-- Edit Shipping Details -->
-                {% if user.is_authenticated %}
-                    <a href="{% url 'edit_shiping_phone' user_data.id %}" style="color: rgb(212, 41, 41); font-size: 19px;">تعديل البيانات</a><br>
-                {% endif %}
-            </div>
-
-
 
             <div class="bills">
                 <div class="promo">
-                    <h2>تفاصيل طلبك</h2>
                     <form method="POST" action="{% url 'billing' %}">
                         {% csrf_token %}
+                        <!-- User Shipping Information -->
+                        <div class="ship-forms">
+                            <h2>العنوان ورقم الهاتف</h2>
+                            <label>الإسم</label>
+                            <input type="text" name="name" required value="{{ user_data.user.username }}" {% if user.is_authenticated %} readonly {% endif %}>
+                            
+                            <label>رقم الهاتف</label>
+                            <input type="number" required placeholder="01234567" name="phoneno" {% if user.is_authenticated %} readonly {% endif %} value="{{ user_data.phone_number }}">
+                            
+                            <label>العنوان</label>
+                            <input type="text" name="address" required {% if user.is_authenticated %} readonly {% endif %} value="{{ user_data.address }}">
+
+                            <!-- Pickup Option -->
+                            <div class="lbel">
+                                <label for="pickup">إستلام من المحل؟</label>
+                                {% if request.user.is_superuser or request.user.is_staff %}
+                                    <input type="checkbox" name="pickup" value="yes" id="mjk" checked disabled>
+                                {% else %}
+                                    <input type="checkbox" name="pickup" value="yes" id="mjk">
+                                {% endif %}
+                            </div>
+
+                            <!-- Edit Shipping Details -->
+                            {% if user.is_authenticated %}
+                                <a href="{% url 'edit_shiping_phone' user_data.id %}" style="color: rgb(212, 41, 41); font-size: 19px;">تعديل البيانات</a><br>
+                            {% endif %}
+                        </div>
+
             
                         <!-- Cart Products Section -->
+                         <hr class="mt-2">
+                        <h2 class="mt-2">تفاصيل طلبك</h2>
                         {% for product in cart_products %}
                             <div class="product-details">
                                 <small>{{ product.name }}</small>

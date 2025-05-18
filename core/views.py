@@ -181,9 +181,6 @@ def order_detail(request, order_id):
 
     total_amount = 0  # Initialize total_amount
 
-    # Get extras from session
-    get_session = request.session.get("user_extras", {})
-
     enriched_order_items = []
     for item in order_items:
         item_total = item.price * item.quantity  # Base price for the item

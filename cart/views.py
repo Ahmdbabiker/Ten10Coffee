@@ -206,6 +206,8 @@ def billing_details(request):
         # Process data for rendering
         if request.user.is_authenticated:
             user_data = request.session.get("user_data", {})
+            user_data["pickup"] = request.POST.get("pickup")
+            request.session["user_data"] = user_data
             data = {
                 "session_data": user_data,
                 "cart_products": cart_products,
@@ -218,6 +220,7 @@ def billing_details(request):
                 "name": request.POST.get("name"),
                 "phone_no": request.POST.get("phoneno"),
                 "address": request.POST.get("address"),
+                "pickup": request.POST.get("pickup"),
             }
             data = {
                 "cart_products": cart_products,
