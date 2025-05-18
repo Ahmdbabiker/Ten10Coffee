@@ -128,7 +128,8 @@ def process_order(request):
                 amount_paid=amount_paid,
                 phone_number=phone,
                 unknown_user=unknown_user_name,
-                pickup=pickup
+                pickup=pickup,
+                extra_data=get_extras
             )
 
             order_id = create_order.pk

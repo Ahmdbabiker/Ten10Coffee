@@ -18,7 +18,7 @@ class OrderItemInline(admin.StackedInline):
 class OrderAdmin(admin.ModelAdmin):
 	model = Order
 	readonly_fields = ["date_ordered"]
-	fields = ["user", "shipping_address", "amount_paid", "date_ordered", "pickup" , "is_new"]
+	fields = ["user", "shipping_address", "amount_paid", "date_ordered", "pickup" , "is_new", "extra_data"]
 	inlines = [OrderItemInline]
 
 # Unregister Order Model
