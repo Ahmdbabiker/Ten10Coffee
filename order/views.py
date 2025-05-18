@@ -69,7 +69,8 @@ def process_order(request):
                 amount_paid=amount_paid,
                 phone_number=phone,
                 pickup=pickup,
-                notes=notes
+                notes=notes,
+                extra_data=get_extras
             )
 
             order_id = create_order.id

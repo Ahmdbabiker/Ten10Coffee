@@ -17,6 +17,7 @@ class Order(models.Model):
     pickup = models.BooleanField(default=False , null=True)
     is_new = models.BooleanField(default=True , null=True)  
     notes = models.TextField(null=True , blank=True)
+    extra_data = models.JSONField(blank=True, null=True)
 	
     def __str__(self):
         return f'Order - {str(self.id)}'       

@@ -193,24 +193,21 @@ def order_detail(request, order_id):
             "price": item.price,
             "extras": []
         }
-
+        product_extras = order.extra_data.get(str(item.product.id), []) if order.extra_data else []
         for extra in item.extras.all():
-            apply_to_all = "لا"
-            specific_quantity = 0  # Default for specific quantity
-            product_extras = get_session.get(str(item.product.id), [])
-
-            for session_extra in product_extras:
-                if int(session_extra["extra_id"]) == extra.id:
-                    if session_extra["apply_to"] == "all":
-                        apply_to_all = "نعم"
-                    elif session_extra["apply_to"] == "specific":
-                        specific_quantity = session_extra.get("specific_quantity", 0)
+            apply_to = None
+            specific_quantity = None
+            
+            for json_extra in product_extras:
+                if json_extra['extra_id'] == str(extra.id):  # Match on extra_id
+                    apply_to = json_extra['apply_to']
+                    specific_quantity = json_extra.get('specific_quantity')
                     break
 
             # Calculate the extra amount based on whether it's applied to all or specific quantities
-            if apply_to_all == "نعم":
+            if apply_to == "all":
                 extra_total = extra.price * item.quantity
-            elif specific_quantity > 0:
+            elif apply_to == "specific" and specific_quantity is not None:
                 extra_total = extra.price * specific_quantity
             else:
                 extra_total = extra.price
@@ -220,8 +217,8 @@ def order_detail(request, order_id):
             item_data["extras"].append({
                 "name": extra.name,
                 "price": extra.price,
-                "apply_to_all": apply_to_all,
-                "specific_quantity": specific_quantity if specific_quantity > 0 else None
+                "apply_to": apply_to,
+                "specific_quantity": specific_quantity
             })
 
         total_amount += item_total  # Add the item total to the overall total

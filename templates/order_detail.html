@@ -61,7 +61,7 @@
             <p>طلب سيارة</p>
         {% endif %}
         <p>العنوان : {{ order.shipping_address }}</p>
-        <p>المبلغ المستحق : {{ total_amount }} د.إ</p>
+        <p>المبلغ المستحق : {{ order.amount_paid }} د.إ</p>
         <p>رقم الهاتف : {{ order.phone_number }}</p>
         <p>إستلام من المحل ؟
             {% if order.pickup %}
@@ -84,9 +84,9 @@
                             {% for extra in item.extras %}
                                 <li>
                                     {{ extra.name }} - {{ extra.price }} د.إ
-                                    {% if extra.apply_to_all == "نعم" %}
+                                    {% if extra.apply_to == "all" %}
                                         (تم تطبيقها على جميع الوجبات)
-                                    {% elif extra.specific_quantity %}
+                                    {% elif extra.apply_to == "specific" and extra.specific_quantity %}
                                         (تم تطبيقها على {{ extra.specific_quantity }} وجبة)
                                     {% else %}
                                         (تم تطبيقها على وجبة واحدة)
