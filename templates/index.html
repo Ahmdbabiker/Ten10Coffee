@@ -9,7 +9,10 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Changa:wght@200..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>Document</title>
+    <title>Ten10</title>
+    <link rel="icon" href="{% static 'images/tenten.png' %}" type="image/x-icon">
+
+
 </head>
 <body dir="rtl">
 
@@ -146,15 +149,15 @@
 
     <!-- sandwiches -->
        <div class="sandwiches">
-           <div class="container">
+           <div class="container" style="padding:0 0.3rem">
                <h2>قائمـة الوجبـات</h2>
                <small class="menn">برجـر , باستا, دجاج مقلي , بطـاطا مقلية و مشروبـات منعشة</small>
                <div class="taking-snadwiches">
 
                 {% for product in all_products %}
-                    <div class="sand-product">
+                    <div class="sand-product" style="margin: 8px 2px; ">
                         <a href="{% url 'meal_detail' product.slug %}">
-                        <img src="{{product.image.url}}">
+                        <img src="{{product.image.url}}" style="max-height:170px">
                         <div class="description">
                             <h4>{{product.name}} </h4>
                             <small class="dr">{{product.tag}}</small><br>
@@ -170,8 +173,8 @@
                                      لا تقييمات بعد
                                 {% endif %}
                             </small>
-                            <div class="fav" style="display: flex">
-                                <div class="prr">
+                            <div class="fav" style="display: flex;width:100%" >
+                                <div class="prr" style="width:100%">
                                     <h3>{{product.price}} <small class="pr">د.إ</small></h3>
                                 </div>
 

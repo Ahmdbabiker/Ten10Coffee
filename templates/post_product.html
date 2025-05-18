@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Changa:wght@200..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>Document</title>
+     <title>Ten10</title>
+    <link rel="icon" href="{% static 'images/tenten.png' %}" type="image/x-icon">
 </head>
 <body dir="rtl">
 
@@ -43,7 +44,7 @@
 
 
 
-   
+
 
 
     <!--profile start-->
@@ -51,7 +52,7 @@
     <div class="profile">
         <div class="container">
             <div class="background">
-                
+
             </div>
             <div class="details">
                 <div class="name-postnew">
@@ -59,16 +60,16 @@
                         <h1> {{profile.storename}}     </h1>
                         <small>{{profile.bio}}</small>
                     </div>
-                    
+
                     <div class="post-new">
-                       
+
                                 <div class="blurry-background"></div>
 
                                 <div  class="form-popupp">
                                   <form class="form-container" method="POST">
                                       {% csrf_token %}
                                     <h2>نشر منتج جديد </h2>
-                                
+
                                     <input type="text" placeholder="اسم المنتج" name="name" required>
                                     <input type="text" placeholder="وصف صغير للمنتج" name="desc" required>
                                     <input type="text" placeholder="السعر" name="price" required>
@@ -80,7 +81,7 @@
 
                     </div>
                 </div>
-                
+
             </div>
         </div>
     </div>
@@ -107,7 +108,7 @@
 
 
 
-    
+
 
     <!--footer -->
 

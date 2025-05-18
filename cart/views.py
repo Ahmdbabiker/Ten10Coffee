@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from datetime import datetime
 from decimal import Decimal
 from django.contrib import messages
+from core.models import Extra
 # Create your views here.
 
 
@@ -79,103 +80,169 @@ def cart_update(request):
 
     return JsonResponse({'success': False, 'error': 'Invalid request'})
 
-
 def customer_data(request):
-
     cart = Cart(request)
-    cart_products = cart.get_prods
-    quantities = cart.get_quants
+    cart_products = cart.get_prods()
+    quantities = cart.get_quants()
     cart_len = len(cart)
 
-    if cart_len > 0 :
-
-        if request.user.is_superuser :
-            total = cart.total()
-        else:
-            total = cart.total()
-
+    if cart_len > 0:
+        total = cart.total()
         today = datetime.today().date()
 
+        # Prepare products with extras and quantity ranges
+        products_with_extras = []
+        for product in cart_products:
+            extras = product.extras.all()
+            quantity = quantities.get(str(product.id), {}).get('quantity', 1)
+            products_with_extras.append({
+                'product': product,
+                'extras': extras,
+                'quantity': quantity,
+                'quantity_range': range(1, quantity + 1)  # Range for selecting specific quantity
+            })
+
+        # For authenticated users, retrieve and pass user data
         if request.user.is_authenticated:
-            user_data = Profile.objects.get(user__id = request.user.id)
+            user_data = Profile.objects.get(user__id=request.user.id)
             form_data = {
-                'phoneno' : user_data.phone_number,
-                'address' : user_data.address
+                'phoneno': user_data.phone_number,
+                'address': user_data.address
             }
             request.session['user_data'] = form_data
-            data = {"user_data":user_data ,"cart_products":cart_products,
-            "quantities":quantities , "total":total , "today":today }
-            return render(request , "customer_details.html" , data)
 
-        if request.method == "POST":
-            pickup = request.POST.get("pickup")
-            if pickup:
-                print("i got the pickup")
-            else:
-                print("sorry ")
+            data = {
+                "user_data": user_data,
+                "cart_products": cart_products,
+                "quantities": quantities,
+                "total": total,
+                "today": today,
+                "products_with_extras": products_with_extras,
+                "apply_extra_options": ["one", "all", "specific"],  # Added "specific" option
+            }
+            return render(request, "customer_details.html", data)
 
-            return redirect("billing")
+        # For non-authenticated users
+        data = {
+            "cart_products": cart_products,
+            "quantities": quantities,
+            "total": total,
+            "today": today,
+            "products_with_extras": products_with_extras,
+            "apply_extra_options": ["one", "all", "specific"],  # Added "specific" option
+        }
+        return render(request, "customer_details.html", data)
 
-        data = {"cart_products":cart_products,
-        "quantities":quantities , "total":total , "today":today }
-        return render(request , "customer_details.html" , data )
     else:
-        messages.error(request , "قم بإضافة المنتجات إلى السلة ")
+        messages.error(request, "قم بإضافة المنتجات إلى السلة ")
         return redirect("home")
+
+
+
+
+
+
 
 
 def billing_details(request):
-    if request.POST:
+    if request.method == "POST":
         cart = Cart(request)
-        cart_products = cart.get_prods
-        quantities = cart.get_quants
-        if request.user.is_superuser :
-            total = cart.total()
-        else:
-            total = cart.total()
+        cart_products = cart.get_prods()
+        quantities = cart.get_quants()
+        total = cart.total()
 
-        today = datetime.today().date()
+        selected_extras = {}
 
+        # Collect selected extras with application scope
+        for key, value in request.POST.items():
+            if key.startswith('extra__'):
+                _, product_id, extra_id = key.split('__')
+                apply_to_key = f"apply_to__{product_id}__{extra_id}"
+                apply_to = request.POST.get(apply_to_key, "all")
+
+                if product_id not in selected_extras:
+                    selected_extras[product_id] = []
+
+                extra_data = {
+                    "extra_id": extra_id,
+                    "extra_name": value,
+                    "apply_to": apply_to,
+                }
+
+                # Handle specific quantity (for apply_to "specific")
+                if apply_to == "specific":
+                    quantity_key = f"quantity__{product_id}__{extra_id}"
+                    specific_quantity = request.POST.get(quantity_key)
+
+                    if specific_quantity:
+                        try:
+                            specific_quantity = int(specific_quantity)  # Convert to int
+                        except ValueError:
+                            specific_quantity = 0  # Default to 0 if invalid
+                    else:
+                        specific_quantity = 0  # Default to 0 if not provided
+
+                    extra_data["specific_quantity"] = specific_quantity
+
+                selected_extras[product_id].append(extra_data)
+
+        # Save selected extras to session
+        request.session['user_extras'] = selected_extras
+
+        # Calculate the total based on selected extras
+        for product_id, extras in selected_extras.items():
+            product_quantity = quantities.get(str(product_id), {}).get('quantity', 1)
+            for extra in extras:
+                extra_obj = Extra.objects.filter(id=extra['extra_id']).first()
+                if extra_obj:
+                    if extra['apply_to'] == "all":
+                        total += extra_obj.price * product_quantity
+                    elif extra['apply_to'] == "one":
+                        total += extra_obj.price
+                    elif extra['apply_to'] == "specific":
+                        specific_quantity = extra.get("specific_quantity", 0)
+                        total += extra_obj.price * specific_quantity
+
+        # Process data for rendering
         if request.user.is_authenticated:
-            if request.method == "POST":
-                pickup = request.POST.get("pickup")
-                if pickup:
-                    total = cart.total()
-
-            get_session_data = request.session.get("user_data")
-            get_session_data['pickup'] = pickup
-            request.session['user_data'] = get_session_data
-            request.session.modified = True
-            print(get_session_data)
-
-            data = {"session_data":get_session_data,"cart_products":cart_products , "quantities":quantities ,
-            "total":total , "today":today , "pickup":pickup}
-            return render(request , "billing.html" , data )
-        else:
-            if request.method == "POST":
-                pickup = request.POST.get("pickup")
-                if pickup:
-                    total = cart.total()
-            get_session_data = request.POST
-            request.session["unknown_user"] = {
-                'name': request.POST.get("name"),
-                'phone_no':request.POST.get("phoneno"),
-                'address':request.POST.get("address"),
+            user_data = request.session.get("user_data", {})
+            data = {
+                "session_data": user_data,
+                "cart_products": cart_products,
+                "quantities": quantities,
+                "total": total,
             }
-            unknown_session = request.session.get("unknown_user")
-            unknown_session['pickup'] = pickup
-            request.session['unknown_user'] = unknown_session
-            request.session.modified = True
+            return render(request, "billing.html", data)
+        else:
+            request.session["unknown_user"] = {
+                "name": request.POST.get("name"),
+                "phone_no": request.POST.get("phoneno"),
+                "address": request.POST.get("address"),
+            }
+            data = {
+                "cart_products": cart_products,
+                "quantities": quantities,
+                "total": total,
+            }
+            return render(request, "billing.html", data)
 
-            data = {"session_data":unknown_session,"cart_products":cart_products , "quantities":quantities ,
-            "total":total , "today":today , "pickup":pickup}
-            return render(request , "billing.html" , data )
-    else:
-        return redirect("home")
+    return redirect("home")
 
-    data = {
-    "cart_products":cart_products , "quantities":quantities ,
-    "total":total , "today":today}
-    return render(request , "billing.html" ,data)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

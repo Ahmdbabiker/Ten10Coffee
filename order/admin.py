@@ -1,5 +1,6 @@
 from django.contrib import admin
-from .models import Order, OrderItem , Coupon
+from .models import Order, OrderItem , Coupon 
+
 from django.contrib.auth.models import User
 
 
@@ -25,5 +26,6 @@ admin.site.unregister(Order)
 
 # Re-Register our Order AND OrderAdmin
 admin.site.register(Order, OrderAdmin)
+
 
 admin.site.register(Coupon)

@@ -15,9 +15,9 @@ SECRET_KEY = 'django-insecure-2b2@-q+^s^ut1_13p&^7w$0_kf$l9ln21g9kts7x36=)8qq1vp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['www.ten10s.com', 'ten10s.com']
 
-
+SECURE_SSL_REDIRECT = True
 # Application definition
 
 INSTALLED_APPS = [
@@ -72,6 +72,15 @@ TEMPLATES = [
 ]
 
 WSGI_APPLICATION = 'src.wsgi.application'
+
+
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'  # Default session engine
+SESSION_COOKIE_NAME = 'sessionid'
+SESSION_EXPIRE_AT_BROWSER_CLOSE = False  # Keep session until it expires or user logs out
+SESSION_COOKIE_AGE = 3600  # 1 hour session expiry time
+
+
 
 
 # Database

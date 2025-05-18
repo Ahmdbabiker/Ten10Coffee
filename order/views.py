@@ -11,113 +11,154 @@ from django.contrib import messages
 
 
 
-def process_order(request):
-    if request.POST:
-        cart = Cart(request)
-        cart_products = cart.get_prods
-        quantities = cart.get_quants
-        totals = cart.total()
 
-        # Log the initial totals for debugging
-        print(f" (المبلغ قبل الخصم): {totals}")
+
+def process_order(request):
+    if request.method == "POST":
+        cart = Cart(request)
+        cart_products = cart.get_prods()
+        quantities = cart.get_quants()
+        totals = cart.total()
 
         if len(cart) == 0:
             return redirect("home")
 
-        dis = request.session.get('discount', 0)  # Default to 0 if no discount
+        # Handle any discounts if applicable
+        discount = request.session.get('discount', 0)
+        if discount > 0:
+            totals -= Decimal(discount)
+            totals = max(totals, 0)
 
-        # If there is a discount, apply it to the totals
-        if dis > 0:
-            print(f"Applying discount: {dis}")
-            totals -= Decimal(dis)
-            totals = max(totals, 0)  # Ensure total is non-negative
+        # Get the extras data from the session
+        get_extras = request.session.get("user_extras", {})
 
-        print(f" (المبلغ بعد الخصم): {totals}")
+        # Apply extras based on user selection
+        for product_id, extras in get_extras.items():
+            quantity = quantities.get(str(product_id), {}).get('quantity', 1)
 
+            # Iterate through the selected extras
+            for extra in extras:
+                extra_obj = Extra.objects.filter(id=extra["extra_id"]).first()
+                if extra_obj:
+                    # Apply the extra based on the user's choice
+                    if extra["apply_to"] == "all":
+                        totals += extra_obj.price * quantity  # Apply to all items in the quantity
+                    elif extra["apply_to"] == "one":
+                        totals += extra_obj.price  # Apply to one item only
+                    elif extra["apply_to"] == "specific":
+                        specific_quantity = extra.get("specific_quantity", 0)
+                        totals += extra_obj.price * specific_quantity  # Apply to a specific number of items
+
+        # Final total to be paid
         amount_paid = totals
-
-        # Clear the discount session value after using it
         request.session.pop('discount', None)
 
         if request.user.is_authenticated:
+            # Handle authenticated user order
             user = request.user
             user_data = request.session.get("user_data")
-
             shipping_address = f"{user_data['address']} \n"
             phone = user_data.get('phoneno')
-            pickk = user_data.get('pickup')
-            picked = pickk == "yes"  # Boolean assignment directly
+            pickup = user_data.get('pickup') == "yes"
+            notes = user_data.get('notes')
 
-            # Create the order for authenticated user
+            # Create the order
             create_order = Order.objects.create(
                 user=user,
                 shipping_address=shipping_address,
                 amount_paid=amount_paid,
                 phone_number=phone,
-                pickup=picked
+                pickup=pickup,
+                notes=notes
             )
 
             order_id = create_order.id
-            order_id_session = request.session["order_no"] = order_id
+            request.session["order_no"] = order_id
 
-            # Add order items
-            for product in cart_products():
+            # Create order items
+            for product in cart_products:
                 product_id = product.id
                 price = product.price
+                quantity = quantities.get(str(product_id), {}).get('quantity', 1)
 
-                for key, value in quantities().items():
-                    if int(key) == product.id:
-                        quantity = value['quantity'] if isinstance(value, dict) else value
-                        create_order_item = OrderItem(order_id=order_id, product_id=product_id, user=user, quantity=quantity, price=price)
-                        create_order_item.save()
+                create_order_item = OrderItem.objects.create(
+                    order=create_order,
+                    product_id=product_id,
+                    user=user,
+                    quantity=quantity,
+                    price=price
+                )
 
-                        # Update product stock
-                        product = Product.objects.get(id=product_id)
-                        product.no_of_buying += quantity
-                        product.save()
+                # Add extras to the order item
+                product_extras = get_extras.get(str(product_id), [])
+                for extra in product_extras:
+                    extra_obj = Extra.objects.filter(id=extra["extra_id"]).first()
+                    if extra_obj:
+                        if extra["apply_to"] == "specific":
+                            specific_quantity = extra.get("specific_quantity", 0)
+                            for _ in range(specific_quantity):
+                                create_order_item.extras.add(extra_obj)
+                        else:
+                            create_order_item.extras.add(extra_obj)
 
-            # Clear the cart after the order is placed
+                # Update product purchase count
+                product.no_of_buying += quantity
+                product.save()
+
+            # Clear session data
             for key in list(request.session.keys()):
                 if key == "session_key":
                     del request.session[key]
 
-            # Success message and redirect
             messages.success(request, "تم تأكيد الطلب")
             return redirect('order_done')
 
         else:
-            # Handle order for unknown user
+            # Handle guest user order
             user_data = request.session.get("unknown_user")
-
-            dict_user_data = user_data.get("address")
+            shipping_address = user_data.get("address")
             phone = user_data.get("phone_no")
             unknown_user_name = user_data.get("name")
-            pickk = user_data.get('pickup')
-            picked = pickk == "yes"
+            pickup = user_data.get('pickup') == "yes"
 
+            # Create the order for the guest user
             create_order = Order.objects.create(
-                shipping_address=dict_user_data,
+                shipping_address=shipping_address,
                 amount_paid=amount_paid,
                 phone_number=phone,
                 unknown_user=unknown_user_name,
-                pickup=picked
+                pickup=pickup
             )
 
             order_id = create_order.pk
-            order_id_session = request.session["order_no"] = order_id
+            request.session["order_no"] = order_id
 
-            # Add order items for unknown user
-            for product in cart_products():
+            # Create order items for guest user
+            for product in cart_products:
                 product_id = product.id
                 price = product.price
+                quantity = quantities.get(str(product_id), {}).get('quantity', 1)
 
-                for key, value in quantities().items():
-                    if int(key) == product.id:
-                        quantity = value['quantity'] if isinstance(value, dict) else value
-                        create_order_item = OrderItem(order_id=order_id, product_id=product_id, quantity=quantity, price=price)
-                        create_order_item.save()
+                create_order_item = OrderItem.objects.create(
+                    order=create_order,
+                    product_id=product_id,
+                    quantity=quantity,
+                    price=price
+                )
 
-            # Clear the cart for unknown user
+                # Add extras to the order item
+                product_extras = get_extras.get(str(product_id), [])
+                for extra in product_extras:
+                    extra_obj = Extra.objects.filter(id=extra["extra_id"]).first()
+                    if extra_obj:
+                        if extra["apply_to"] == "specific":
+                            specific_quantity = extra.get("specific_quantity", 0)
+                            for _ in range(specific_quantity):
+                                create_order_item.extras.add(extra_obj)
+                        else:
+                            create_order_item.extras.add(extra_obj)
+
+            # Clear session data
             for key in list(request.session.keys()):
                 if key == "session_key":
                     del request.session[key]
@@ -125,9 +166,13 @@ def process_order(request):
             messages.success(request, "تم الطلب")
             return redirect('order_done')
 
-    else:
-        messages.success(request, "تم رفض الطلب")
-        return redirect('home')
+    messages.error(request, "تم رفض الطلب")
+    return redirect('home')
+
+
+
+
+
 
 
 
@@ -179,7 +224,6 @@ def apply_coupon(request):
     else:
         return redirect("home")
 
-    return redirect('billing')
 
 
 

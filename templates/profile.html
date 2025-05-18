@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Changa:wght@200..800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" integrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
-    <title>Document</title>
+     <title>Ten10</title>
+    <link rel="icon" href="{% static 'images/tenten.png' %}" type="image/x-icon">
 </head>
 <body dir="rtl">
 
@@ -43,7 +44,7 @@
 
 
 
-   
+
 
 
     <!--profile start-->
@@ -51,7 +52,7 @@
     <div class="profile">
         <div class="container">
             <div class="background">
-                
+
             </div>
             <div class="details">
                 <div class="name-postnew">
@@ -59,13 +60,13 @@
                         <h1> {{profile.storename}}     </h1>
                         <small>{{profile.bio}}</small>
                     </div>
-                    
+
                     <div class="post-new">
                         {% if user == profile.user  %}
                         <a href="{% url 'newproduct' profile.id %}">نشر منتج جديد</a>
-                        
+
                         <a href="{% url 'profile_update' profile.id %}" id="openBtn1" >تعديل بيانات الملف الشخصي</a>
-                        
+
                         <a href="{% url 'viewprofileorders' profile.id %}">الطلبات</a>
                         {% endif %}
                                 <div id="blurryBackground" class="blurry-background"></div>
@@ -73,12 +74,12 @@
                                 <div id="popupForm" class="form-popup">
                                   <form class="form-container">
                                     <h2>نشر منتج جديد </h2>
-                                
+
                                     <input type="text" placeholder="اسم المنتج" name="name" required>
                                     <input type="text" placeholder="وصف صغير للمنتج" name="desc" required>
                                     <input type="text" placeholder="السعر" name="price" required>
                                     <input type="file" placeholder="أرفق صورة" name="photo" required><br>
-                                
+
                                     <button type="submit" class="btn">نشر</button>
                                     <button type="button" class="btn cancel" id="closeBtn">إغلاق</button>
                                   </form>
@@ -210,210 +211,210 @@
     </div>
 
 <div id="tab3" class="tabcontent">
-    
+
 <div class="comments" id="comments">
     <div class="comment">
         <div class="all-rating">
             <div class="single-rate comment">
-  
+
               <div class="image-name">
                   <div class="img">
-  
+
                   </div>
                   <div class="name-date">
                       <small>أحمد بابكر الماحي - منذ 4 أيام</small><br>
                       <small>التقييم : ممتاز</small>
                   </div>
               </div>
-  
+
               <div class="review">
                   <p>هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                       هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                   </p>
               </div>
-  
+
             </div>
 
 
             <div class="single-rate comment">
-  
+
                 <div class="image-name">
                     <div class="img">
-    
+
                     </div>
                     <div class="name-date">
                         <small>أحمد بابكر الماحي - منذ 4 أيام</small><br>
                         <small>التقييم : ممتاز</small>
                     </div>
                 </div>
-    
+
                 <div class="review">
                     <p>هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                         هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                     </p>
                 </div>
-    
+
               </div>
 
 
               <div class="single-rate comment">
-  
+
                 <div class="image-name">
                     <div class="img">
-    
+
                     </div>
                     <div class="name-date">
                         <small>أحمد بابكر الماحي - منذ 4 أيام</small><br>
                         <small>التقييم : ممتاز</small>
                     </div>
                 </div>
-    
+
                 <div class="review">
                     <p>هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                         هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                     </p>
                 </div>
-    
-              </div>
-            
-            
-              <div class="single-rate comment">
-  
-                <div class="image-name">
-                    <div class="img">
-    
-                    </div>
-                    <div class="name-date">
-                        <small>أحمد بابكر الماحي - منذ 4 أيام</small><br>
-                        <small>التقييم : ممتاز</small>
-                    </div>
-                </div>
-    
-                <div class="review">
-                    <p>هنا التعليق على ملف البائع هنا التعليق على ملف البائع
-                        هنا التعليق على ملف البائع هنا التعليق على ملف البائع
-                    </p>
-                </div>
-    
+
               </div>
 
 
-
               <div class="single-rate comment">
-  
+
                 <div class="image-name">
                     <div class="img">
-    
+
                     </div>
                     <div class="name-date">
                         <small>أحمد بابكر الماحي - منذ 4 أيام</small><br>
                         <small>التقييم : ممتاز</small>
                     </div>
                 </div>
-    
+
                 <div class="review">
                     <p>هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                         هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                     </p>
                 </div>
-    
+
               </div>
 
 
 
               <div class="single-rate comment">
-  
+
                 <div class="image-name">
                     <div class="img">
-    
+
                     </div>
                     <div class="name-date">
                         <small>أحمد بابكر الماحي - منذ 4 أيام</small><br>
                         <small>التقييم : ممتاز</small>
                     </div>
                 </div>
-    
+
                 <div class="review">
                     <p>هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                         هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                     </p>
                 </div>
-    
+
               </div>
 
 
 
               <div class="single-rate comment">
-  
+
                 <div class="image-name">
                     <div class="img">
-    
+
                     </div>
                     <div class="name-date">
                         <small>أحمد بابكر الماحي - منذ 4 أيام</small><br>
                         <small>التقييم : ممتاز</small>
                     </div>
                 </div>
-    
+
                 <div class="review">
                     <p>هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                         هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                     </p>
                 </div>
-    
+
               </div>
 
 
 
               <div class="single-rate comment">
-  
+
                 <div class="image-name">
                     <div class="img">
-    
+
                     </div>
                     <div class="name-date">
                         <small>أحمد بابكر الماحي - منذ 4 أيام</small><br>
                         <small>التقييم : ممتاز</small>
                     </div>
                 </div>
-    
+
                 <div class="review">
                     <p>هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                         هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                     </p>
                 </div>
-    
+
+              </div>
+
+
+
+              <div class="single-rate comment">
+
+                <div class="image-name">
+                    <div class="img">
+
+                    </div>
+                    <div class="name-date">
+                        <small>أحمد بابكر الماحي - منذ 4 أيام</small><br>
+                        <small>التقييم : ممتاز</small>
+                    </div>
+                </div>
+
+                <div class="review">
+                    <p>هنا التعليق على ملف البائع هنا التعليق على ملف البائع
+                        هنا التعليق على ملف البائع هنا التعليق على ملف البائع
+                    </p>
+                </div>
+
               </div>
 
 
 
 
               <div class="single-rate comment">
-  
+
                 <div class="image-name">
                     <div class="img">
-    
+
                     </div>
                     <div class="name-date">
                         <small>أحمد بابكر الماحي - منذ 4 أيام</small><br>
                         <small>التقييم : ممتاز</small>
                     </div>
                 </div>
-    
+
                 <div class="review">
                     <p>هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                         هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                     </p>
                 </div>
-    
+
               </div>
     </div>
    </div>
     <!-- Add more comments here -->
   </div>
-  
+
   <div id="loader" class="loader"></div> <!-- Loader element -->
-  
+
   <button id="loadMoreBtn">Load More</button>
 </div>
 
@@ -454,70 +455,70 @@
       <div class="customer-rating">
         <div class="all-rating">
             <div class="single-rate">
-  
+
               <div class="image-name">
                   <div class="img">
-  
+
                   </div>
                   <div class="name-date">
                       <small>أحمد بابكر الماحي - منذ 4 أيام</small><br>
                       <small>التقييم : ممتاز</small>
                   </div>
               </div>
-  
+
               <div class="review">
                   <p>هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                       هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                   </p>
               </div>
-  
+
             </div>
-  
-  
+
+
             <div class="single-rate">
-  
+
               <div class="image-name">
                   <div class="img">
-  
+
                   </div>
                   <div class="name-date">
                       <small>أحمد بابكر الماحي - منذ 4 أيام</small><br>
                       <small>التقييم : ممتاز</small>
                   </div>
               </div>
-  
+
               <div class="review">
                   <p>هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                       هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                   </p>
               </div>
-  
+
             </div>
-      
-  
-  
+
+
+
             <div class="single-rate">
-  
+
               <div class="image-name">
                   <div class="img">
-  
+
                   </div>
                   <div class="name-date">
                       <small>أحمد بابكر الماحي - منذ 4 أيام</small><br>
                       <small>التقييم : ممتاز</small>
                   </div>
               </div>
-  
+
               <div class="review">
                   <p>هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                       هنا التعليق على ملف البائع هنا التعليق على ملف البائع
                   </p>
               </div>
-  
+
             </div>
-  
-  
-  
+
+
+
         </div>
     </div>
 
@@ -541,7 +542,7 @@
 
 
 
-    
+
 
     <!--footer -->
 
@@ -593,7 +594,7 @@ function openTab(tabName) {
   for (var i = 0; i < tabContents.length; i++) {
     tabContents[i].classList.remove("show");
   }
-  
+
   // Show the selected tab content
   document.getElementById(tabName).classList.add("show");
 }

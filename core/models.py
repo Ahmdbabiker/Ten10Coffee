@@ -23,6 +23,18 @@ class Tag(models.Model):
     def __str__(self):
         return self.name
 
+
+class Extra(models.Model):
+    name = models.CharField(max_length=50)
+    price = models.DecimalField(max_digits=5, decimal_places=2)
+
+    def __str__(self):
+        return self.name
+    
+    def extras(self):
+        return Product.objects.filter(extras__id = self.id)
+
+
 class Product(models.Model):
     name = models.CharField(max_length=52)
     slug = models.SlugField()
@@ -31,7 +43,8 @@ class Product(models.Model):
     no_of_buying = models.IntegerField(default=0)
     image = models.ImageField(upload_to='images' , null=True ,blank=True, default='static/images/ten.png')
     tag = models.ForeignKey(Tag , on_delete=models.CASCADE)
-    
+    extras = models.ManyToManyField(Extra, blank=True, related_name='products')
+
     def save(self, *args, **kwargs):
         if not self.slug:  # Only set slug if it's empty
             self.slug = slugify(self.name)

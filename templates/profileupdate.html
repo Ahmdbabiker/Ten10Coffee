@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <title>Profile Page</title>
+     <title>Ten10</title>
+    <link rel="icon" href="{% static 'images/tenten.png' %}" type="image/x-icon">
 
     <link rel="stylesheet" href="{% static 'star-ratings/css/star-ratings.css' %}">
 
@@ -17,14 +17,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css">
 </head>
 <body>
-    
+
 
     <div class="update">
         <div class="edit-profile">
             <div class="container">
                 <form method="POST">
                     {% csrf_token %}
-    
+
                     <input type="text" placeholder="name" name="name" value="{{profile.name}}"><br>
                     <input type="number" placeholder="number" name="phone" value="{{profile.phone_number}}"><br>
                     <input type="text" placeholder="bio" name="bio" value="{{profile.bio}}"><br>
@@ -34,13 +34,13 @@
                         {% endfor %}
                     </select>
                     <input type="submit"  value="تعديل"><br>
-    
+
                 </form>
             </div>
         </div>
-    
+
         <hr>
-    
+
     </div>
 
 

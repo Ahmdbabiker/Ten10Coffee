@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 {% load static %}
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -51,76 +52,119 @@
     <!--navbar ending-->
 
 
-    <!-- shipping and payment -->
+<!-- shipping and payment -->
+<div class="shipping">
+    <div class="container">
+        <div class="shipping-bill">
+            
 
-    <div class="shipping">
-        <div class="container">
-
-            <div class="shipping-bill">
-
-
-                <div class="bills">
-
-                    <div class="promo">
-                        <h2>تفـاصيل طلبـك</h2>
-                        {% for product in cart_products %}
-                       <small> {{product.name}} </small>
-                       <small>x
-                        {% for key, value in quantities.items %}
-                            {% if key == product.id|slugify %}
-                            {{ value.quantity }},
-                            {% endif %}
-                        {% endfor %}</small>
-
-
-
-
-
-
-                       {% endfor %}
-
-                    </div>
-
-
-
-               </div>
-
-
+            <!-- User Shipping Information -->
             <div class="ship-forms">
-                <h2> العنوان ورقم الهاتف</h2>
-                <form method="POST" action="{% url 'billing' %}">
-                    {% csrf_token %}
-                    <label>الإسـم </label>
-                    <input type="text" name="name" required value="{{user_data.user.username}}" {% if user.is_authenticated %} readonly {% endif%}>
-                    <label>رقم الهاتف</label>
-                    <input type="number" required placeholder="01234567" name="phoneno"  {% if user.is_authenticated %} readonly {% endif%} value="{{user_data.phone_number}}">
-                    <label>العنوان</label>
-                    <input type="text" name="address" required  {% if user.is_authenticated %} readonly {% endif%} value="{{user_data.address}}">
+                <h2>العنوان ورقم الهاتف</h2>
+                <label>الإسم</label>
+                <input type="text" name="name" required value="{{ user_data.user.username }}" {% if user.is_authenticated %} readonly {% endif %}>
+                
+                <label>رقم الهاتف</label>
+                <input type="number" required placeholder="01234567" name="phoneno" {% if user.is_authenticated %} readonly {% endif %} value="{{ user_data.phone_number }}">
+                
+                <label>العنوان</label>
+                <input type="text" name="address" required {% if user.is_authenticated %} readonly {% endif %} value="{{ user_data.address }}">
 
+                <!-- Pickup Option -->
                 <div class="lbel">
-                    <label for="pickup">إستلام من المحل ؟ </label>
+                    <label for="pickup">إستلام من المحل؟</label>
                     {% if request.user.is_superuser or request.user.is_staff %}
-                    <input type="checkbox" name="pickup" value="yes" id="mjk" checked disabled>
-                    {%else%}
-                    <input type="checkbox" name="pickup" value="yes" id="mjk">
-                    {%endif%}
-
+                        <input type="checkbox" name="pickup" value="yes" id="mjk" checked disabled>
+                    {% else %}
+                        <input type="checkbox" name="pickup" value="yes" id="mjk">
+                    {% endif %}
                 </div>
 
-                    <input type="submit" value=" تأكيد البيانات" id="nbv">
-                    {% if user.is_authenticated %}
-
-                    <a href="{% url 'edit_shiping_phone' user_data.id  %}" style="color: rgb(212, 41, 41);font-size: 19px;">تعديل البيانات</a><br>
-                    {% endif %}
-
-                </form>
+                <!-- Edit Shipping Details -->
+                {% if user.is_authenticated %}
+                    <a href="{% url 'edit_shiping_phone' user_data.id %}" style="color: rgb(212, 41, 41); font-size: 19px;">تعديل البيانات</a><br>
+                {% endif %}
             </div>
 
-        </div>
 
+
+            <div class="bills">
+                <div class="promo">
+                    <h2>تفاصيل طلبك</h2>
+                    <form method="POST" action="{% url 'billing' %}">
+                        {% csrf_token %}
+            
+                        <!-- Cart Products Section -->
+                        {% for product in cart_products %}
+                            <div class="product-details">
+                                <small>{{ product.name }}</small>
+                                <small>
+                                    x
+                                    {% for key, value in quantities.items %}
+                                        {% if key == product.id|stringformat:"s" %}
+                                            {{ value.quantity }}
+                                        {% endif %}
+                                    {% endfor %}
+                                </small>
+                            </div>
+                        {% endfor %}
+            
+                        <!-- Extras Section -->
+                        <h3>الإضافات</h3>
+                        {% for item in products_with_extras %}
+                            <div class="extras-section">
+                                <h5>الإضافات لـ "{{ item.product.name }}"</h5>
+                                {% for extra in item.extras %}
+                                    <div class="extra-option">
+                                        <label>
+                                            <input type="checkbox" name="extra__{{ item.product.id }}__{{ extra.id }}" value="{{ extra.id }}">
+                                            {{ extra.name }} - ({{ extra.price }}) د.إ
+                                        </label>
+            
+                                        <!-- Display all options without toggling -->
+                                        <div>
+                                            <label style="color:gray;font-size:15px">
+                                                <input type="radio" name="apply_to__{{ item.product.id }}__{{ extra.id }}" value="one">
+                                                تطبق على وجبة واحدة
+                                            </label><br>
+                                            <label style="color:gray;font-size:15px">
+                                                <input type="radio" name="apply_to__{{ item.product.id }}__{{ extra.id }}" value="all" checked>
+                                                تطبق على كل الوجبات
+                                            </label><br>
+                                            <label style="color:gray;font-size:15px">
+                                                <input type="radio" name="apply_to__{{ item.product.id }}__{{ extra.id }}" value="specific">
+                                                تطبق على كمية محددة
+                                            </label><br>
+                                            <!-- Quantity Input -->
+                                            <label>
+                                                الكمية:
+                                                <input type="number" name="quantity__{{ item.product.id }}__{{ extra.id }}" min="1" max="{{ item.quantity }}" value="1" style="width: 50px;">
+                                            </label>
+                                        </div>
+                                    </div>
+                                {% empty %}
+                                    <p>لا توجد إضافات</p>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+            
+                        <!-- Submit Button -->
+                        <input type="submit" 
+                               style="width: 100%; background-color: rgb(34, 34, 34); color: white; font-size: 20px; text-align: center; border: none; border-radius: 8px; margin-top: 7px;" 
+                               value="إستمـرار">
+                    </form>
+                </div>
+            </div>
+            
+
+            
         </div>
     </div>
-    <!-- shipping and payment-->
+</div>
+
+
+<!-- shipping and payment -->
+
 
 
 
@@ -150,11 +194,11 @@
     <!--footer -->
 
 
-
-<script>
-
-
-</script>
+    
+    
+    
+    
+    
 
 
 </html>

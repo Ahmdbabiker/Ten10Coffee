@@ -164,19 +164,85 @@ def general_rating(request, rate_int):
         "selected_product": selected_product,
     }
     return render(request, "gen_rate.html", data)
+
+
 def get_new_orders(request):
     if request.method == "GET":
         new_orders = Order.objects.filter(is_new=True)
         orders_data = [{'id': order.id} for order in new_orders]
         return JsonResponse({'orders': orders_data})
+        
 
-def order_detail(request , order_id):
-    order_item = OrderItem.objects.filter(order__id = order_id)
-    order = Order.objects.get(id = order_id)
-    order.is_new = False
-    order.save()
-    data = {"order_item":order_item , "order":order}
-    return render(request , "order_detail.html" , data)
+
+
+def order_detail(request, order_id):
+    order = Order.objects.get(id=order_id)
+    order_items = OrderItem.objects.filter(order=order).prefetch_related('extras')
+
+    total_amount = 0  # Initialize total_amount
+
+    # Get extras from session
+    get_session = request.session.get("user_extras", {})
+
+    enriched_order_items = []
+    for item in order_items:
+        item_total = item.price * item.quantity  # Base price for the item
+        item_data = {
+            "product": item.product,
+            "quantity": item.quantity,
+            "price": item.price,
+            "extras": []
+        }
+
+        for extra in item.extras.all():
+            apply_to_all = "لا"
+            specific_quantity = 0  # Default for specific quantity
+            product_extras = get_session.get(str(item.product.id), [])
+
+            for session_extra in product_extras:
+                if int(session_extra["extra_id"]) == extra.id:
+                    if session_extra["apply_to"] == "all":
+                        apply_to_all = "نعم"
+                    elif session_extra["apply_to"] == "specific":
+                        specific_quantity = session_extra.get("specific_quantity", 0)
+                    break
+
+            # Calculate the extra amount based on whether it's applied to all or specific quantities
+            if apply_to_all == "نعم":
+                extra_total = extra.price * item.quantity
+            elif specific_quantity > 0:
+                extra_total = extra.price * specific_quantity
+            else:
+                extra_total = extra.price
+
+            item_total += extra_total  # Add the extra amount to the item total
+
+            item_data["extras"].append({
+                "name": extra.name,
+                "price": extra.price,
+                "apply_to_all": apply_to_all,
+                "specific_quantity": specific_quantity if specific_quantity > 0 else None
+            })
+
+        total_amount += item_total  # Add the item total to the overall total
+
+        enriched_order_items.append(item_data)
+
+    return render(request, "order_detail.html", {
+        "order_item": enriched_order_items,
+        "order": order,
+        "total_amount": total_amount
+    })
+
+
+
+
+
+
+
+
+
+
 
 def product_admin(request):
     all_products = Product.objects.all()
