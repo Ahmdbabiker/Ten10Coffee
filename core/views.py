@@ -171,7 +171,7 @@ def get_new_orders(request):
         new_orders = Order.objects.filter(is_new=True)
         orders_data = [{'id': order.id} for order in new_orders]
         return JsonResponse({'orders': orders_data})
-        
+
 
 
 
@@ -194,7 +194,7 @@ def order_detail(request, order_id):
         for extra in item.extras.all():
             apply_to = None
             specific_quantity = None
-            
+
             for json_extra in product_extras:
                 if json_extra['extra_id'] == str(extra.id):  # Match on extra_id
                     apply_to = json_extra['apply_to']
@@ -310,7 +310,7 @@ def order_done(request):
     if request.user.is_authenticated:
         current_user = request.user.id
         profile = Profile.objects.get(user__id = current_user)
-        base_url = "https://wa.me/971563179971"
+        base_url = "https://wa.me/971504779748"
         message = f"Order ID: {get_session}\nLocation: {profile.home_location}"
         query_params = urlencode({'text': message})
         whatsapp_link = f"{base_url}?{query_params}"
