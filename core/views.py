@@ -6,14 +6,18 @@ from order.models import *
 from django.db.models import Sum
 from django.utils import timezone
 import time
+from django.views.generic import CreateView, UpdateView
 from datetime import timedelta
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 from django.http import StreamingHttpResponse
+from django.contrib.messages.views import SuccessMessageMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 import json
 from urllib.parse import urlencode
 from order.models import *
-
+from .forms import ProductForm
+from django.urls import reverse_lazy
 
 
 # Create your views here.
@@ -248,56 +252,84 @@ def product_admin(request):
     data = {"all_products":all_products}
     return render(request , "manage_product.html" ,data)
 
-def edit_product(request , product_id):
-    get_product = Product.objects.get(id = product_id)
-    if request.method == "POST":
-        name = request.POST.get("name")
-        desc = request.POST.get("desc")
-        price = request.POST.get("price")
-        image = request.FILES.get("image")
+# def edit_product(request , product_id):
+#     get_product = Product.objects.get(id = product_id)
+#     if request.method == "POST":
+#         name = request.POST.get("name")
+#         desc = request.POST.get("desc")
+#         price = request.POST.get("price")
+#         image = request.FILES.get("image")
 
-        get_product.name = name
-        get_product.desc = desc
-        get_product.price = price
+#         get_product.name = name
+#         get_product.desc = desc
+#         get_product.price = price
 
-        if image:
-            get_product.image = image
+#         if image:
+#             get_product.image = image
 
-        get_product.save()
+#         get_product.save()
 
-        messages.success(request , "تم التعديل")
-        return redirect("product_admin")
-
-
-    data = {"get_product":get_product}
-    return render(request , "edit_product.html" , data)
-
-def add_product(request):
-    if request.method == "POST":
-        name = request.POST.get("name")
-        desc = request.POST.get("desc")
-        price = request.POST.get("price")
-        image = request.FILES.get("image")
-        tag = request.POST.get("tag")
-        slug = slugify(name)
-
-        tag_selected = None
-
-        if tag == '1' :
-            tag_selected = Tag.objects.get(id = 1 )
-        elif tag == '2' :
-            tag_selected = Tag.objects.get(id = 2 )
-        elif tag == '3' :
-            tag_selected = Tag.objects.get(id = 3 )
+#         messages.success(request , "تم التعديل")
+#         return redirect("product_admin")
 
 
-        add_new_product = Product.objects.create(name = name , slug =slug, desc = desc ,
-        price = price , image = image ,tag = tag_selected)
-        add_new_product.save()
-        messages.success(request , "تمت الإضافة")
-        return redirect("product_admin")
+#     data = {"get_product":get_product}
+#     return render(request , "edit_product.html" , data)
 
-    return render(request , "add_product.html" )
+# def add_product(request):
+#     if request.method == "POST":
+#         name = request.POST.get("name")
+#         desc = request.POST.get("desc")
+#         price = request.POST.get("price")
+#         image = request.FILES.get("image")
+#         tag = request.POST.get("tag")
+#         slug = slugify(name)
+
+#         tag_selected = None
+
+#         if tag == '1' :
+#             tag_selected = Tag.objects.get(id = 1 )
+#         elif tag == '2' :
+#             tag_selected = Tag.objects.get(id = 2 )
+#         elif tag == '3' :
+#             tag_selected = Tag.objects.get(id = 3 )
+
+
+#         add_new_product = Product.objects.create(name = name , slug =slug, desc = desc ,
+#         price = price , image = image ,tag = tag_selected)
+#         add_new_product.save()
+#         messages.success(request , "تمت الإضافة")
+#         return redirect("product_admin")
+
+#     return render(request , "add_product.html" )
+
+class ProductUpdateView(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin,UpdateView):
+    model = Product
+    template_name = 'edit_product.html'
+    success_url = reverse_lazy("product_admin")
+    success_message = "تمت التعديل"
+    form_class = ProductForm
+
+    def test_func(self):
+        user = self.request.user
+        if user.is_staff or user.is_superuser:
+            return True
+        return False
+
+
+class ProductAdd(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, CreateView):
+    model = Product
+    template_name = 'add_product.html'
+    success_url = reverse_lazy("product_admin")
+    success_message = "تمت الإضافة"
+    form_class = ProductForm
+
+    def test_func(self):
+        user = self.request.user
+        if user.is_staff or user.is_superuser:
+            return True
+        return False
+
 
 def user_orders(request , user_id):
     current_user = request.user.id

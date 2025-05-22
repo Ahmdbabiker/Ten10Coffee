@@ -82,7 +82,9 @@
                                     <input type="checkbox" name="pickup" value="yes" id="mjk">
                                 {% endif %}
                             </div>
-
+                            <label for="notes">ملاحظات:</label>
+                            <textarea name="notes" class="ship-forms" placeholder="اضف ملاحظاتك علي الطلب"></textarea>
+                            <br>
                             <!-- Edit Shipping Details -->
                             {% if user.is_authenticated %}
                                 <a href="{% url 'edit_shiping_phone' user_data.id %}" style="color: rgb(212, 41, 41); font-size: 19px;">تعديل البيانات</a><br>

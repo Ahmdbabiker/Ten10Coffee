@@ -15,9 +15,9 @@ SECRET_KEY = 'django-insecure-2b2@-q+^s^ut1_13p&^7w$0_kf$l9ln21g9kts7x36=)8qq1vp
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['www.ten10s.com', 'ten10s.com']
+ALLOWED_HOSTS = ['www.ten10s.com', 'ten10s.com', '127.0.0.1']
 
-SECURE_SSL_REDIRECT = True
+# SECURE_SSL_REDIRECT = True
 # Application definition
 
 INSTALLED_APPS = [
@@ -118,7 +118,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ar'
 
 
 

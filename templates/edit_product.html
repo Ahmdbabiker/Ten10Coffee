@@ -21,7 +21,7 @@
 
     <nav class="navbar">
         <div class="logo">
-            <img src="{% static 'images/tenten.png' %}" height="80px" width="80px">
+            <img src="{% static 'images/tenten.png'%}" height="80px" width="80px">
         </div>
         <div class="tit">
             <small>دومـاً, عشرة على 10</small>
@@ -32,20 +32,13 @@
             <span class="bar"></span>
         </div>
         <ul class="nav-list">
-            <li><a href="{% url 'home' %}">الرئيسية</a></li>
-            <li><a href="{% url 'contact' %}">التواصل</a></li>
+            <li><a href="#">الرئيسية</a></li>
+            <li><a href="#">المفضلة</a></li>
+            <li><a href="#">طلباتي</a></li>
             <li><a href="{% url 'cart_summary' %}">
                 السلة (<span id="cart_quantity"> {{cart|length}}</span>)
             </a></li>
-            {% if request.user.is_authenticated %}
-
-            <li><a href="{% url 'edit_shiping_phone' request.user.id %}">{{request.user.username}}</a></li>
-            <li><a href="{% url 'signout' %}">خروج</a></li>
-            <li><a href="{% url 'myorders' request.user.id %}">طلباتي</a></li>
-            {%else%}
-            <li class="uniqe"><a href="{% url 'signin' %}">دخول</a></li>
-            <li class="uniqe"><a href="{% url 'signup' %}">تسجيل</a></li>
-            {%endif%}
+            <li class="uniqe"><a href="">دخول</a></li>
         </ul>
     </nav>
     <!--navbar ending-->
@@ -53,45 +46,77 @@
 
     <div class="login">
         <div class="container">
-            <h2>  تعديل بيانات</h2>
+            <h2> إضافة وجبـة</h2>
             <div class="title-form">
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <label>إسم الوجبة</label><br>
-                    <input type="text" name="name"  value="{{get_product.name}}"><br>
-                    <label> مكونات الوجبة</label><br>
-                    <input type="text" value="{{get_product.desc}}" name="desc"><br>
-                    <label> السعـر</label><br>
-                    <input type="number" value="{{get_product.price}}" name="price" step="0.01"><br>
-                    <label> صورة الوجبة</label>
-                    {% if get_product.image %}
-                    <img src="{{ get_product.image.url }}" alt="Current Image" style="max-width: 100px;">
-                    {% endif %}
-                    <input type="file" name="image" ><br>
+                    <div class="form-group">
+                        <label for="{{ form.name.id_for_label }}">إسم الوجبة</label><br>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div class="error">
+                                {{ form.name.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.desc.id_for_label }}">مكونات الوجبة</label><br>
+                        {{ form.desc }}
+                        {% if form.desc.errors %}
+                            <div class="error">
+                                {{ form.desc.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.price.id_for_label }}">السعـر</label><br>
+                        {{ form.price }}
+                        {% if form.price.errors %}
+                            <div class="error">
+                                {{ form.price.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.image.id_for_label }}">صورة الوجبة</label><br>
+                        {{ form.image }}
+                        {% if form.image.errors %}
+                            <div class="error">
+                                {{ form.image.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.tag.id_for_label }}"></label>
+                        {{ form.tag }}
+                        {% if form.tag.errors %}
+                            <div class="error">
+                                {{ form.tag.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">الاضافات</label>
+                        <div class="checkbox-group">
+                            {% for checkbox in form.extras %}
+                            <div class="checkbox-item">
+                                <label>
+                                    {{ checkbox.tag }} {{ checkbox.choice_label }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                            {% if form.extras.errors %}
+                            <div class="error">
+                                {{ form.extras.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
                     <input type="submit" class="login" value="تعديل" style="cursor: pointer;">
                 </form>
             </div>
         </div>
     </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -123,34 +148,6 @@
 
 
 
-
-    <!-- footer navbar-->
-    <div class="foooter-nav">
-        <div class="container">
-            <div class="links">
-                <div class="link-tab">
-                    <i class="fas fa-home"></i><br>
-                    <small>الرئيسية </small>
-                </div>
-                <div class="link-tab">
-                    <i class="fas fa-shopping-bag"></i><br>
-                    <small>طلباتي </small>
-                </div>
-                <div class="link-tab">
-                    <i class="fas fa-user"></i><br>
-                    <small>حسابي </small>
-
-                </div>
-                <div class="link-tab">
-                    <i class="fas fa-shopping-cart"></i><br>
-                    <small>سلة التسوق </small>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-<!-- footer navbar-->
 
 
 

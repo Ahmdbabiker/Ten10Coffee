@@ -50,19 +50,68 @@
             <div class="title-form">
                 <form method="POST" enctype="multipart/form-data">
                     {% csrf_token %}
-                    <label>إسم الوجبة</label><br>
-                    <input type="text" name="name" required><br>
-                    <label> مكونات الوجبة</label><br>
-                    <input type="text" name="desc" required><br>
-                    <label> السعـر</label><br>
-                    <input type="number" name="price" step="0.01" required><br>
-                    <label> صورة الوجبة</label><br>
-                    <input type="file" name="image"><br>
-                    <select name="tag">
-                        <option value="1">المشروبات</option>
-                        <option value="2">السندوتشات</option>
-                        <option value="3">اخرى</option>
-                    </select><br>
+                    <div class="form-group">
+                        <label for="{{ form.name.id_for_label }}">إسم الوجبة</label><br>
+                        {{ form.name }}
+                        {% if form.name.errors %}
+                            <div class="error">
+                                {{ form.name.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.desc.id_for_label }}">مكونات الوجبة</label><br>
+                        {{ form.desc }}
+                        {% if form.desc.errors %}
+                            <div class="error">
+                                {{ form.desc.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.price.id_for_label }}">السعـر</label><br>
+                        {{ form.price }}
+                        {% if form.price.errors %}
+                            <div class="error">
+                                {{ form.price.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.image.id_for_label }}">صورة الوجبة</label><br>
+                        {{ form.image }}
+                        {% if form.image.errors %}
+                            <div class="error">
+                                {{ form.image.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.tag.id_for_label }}"></label>
+                        {{ form.tag }}
+                        {% if form.tag.errors %}
+                            <div class="error">
+                                {{ form.tag.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">الاضافات</label>
+                        <div class="checkbox-group">
+                            {% for checkbox in form.extras %}
+                            <div class="checkbox-item">
+                                <label>
+                                    {{ checkbox.tag }} {{ checkbox.choice_label }}
+                                </label>
+                            </div>
+                            {% endfor %}
+                            {% if form.extras.errors %}
+                            <div class="error">
+                                {{ form.extras.errors }}
+                            </div>
+                            {% endif %}
+                        </div>
+                    </div>
                     <input type="submit" class="login" value="إضافة" style="cursor: pointer;">
                 </form>
             </div>

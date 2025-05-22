@@ -120,6 +120,7 @@ def process_order(request):
             shipping_address = user_data.get("address")
             phone = user_data.get("phone_no")
             unknown_user_name = user_data.get("name")
+            notes = user_data.get("notes")
             pickup = user_data.get('pickup') == "yes"
 
             # Create the order for the guest user
@@ -129,6 +130,7 @@ def process_order(request):
                 phone_number=phone,
                 unknown_user=unknown_user_name,
                 pickup=pickup,
+                notes=notes,
                 extra_data=get_extras
             )
 
