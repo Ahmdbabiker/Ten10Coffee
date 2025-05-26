@@ -681,7 +681,7 @@
 .cart_detail .taking-sides .nvv{
     display: flex;
     flex-wrap: wrap;
-    width: 60%;
+    width: 200%;
 }
 .cart_detail .taking-sides .products .pro-desc{
     width: 60%;

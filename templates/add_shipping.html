@@ -54,7 +54,8 @@
     {{message}}
     {% endfor%}
     <!--login -->
-    <div class="login">
+    <div class="login" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);width:100%">
+
         <div class="container">
             <h2> رقم الهاتف والعنوان</h2>
             <div class="title-form">
@@ -64,9 +65,19 @@
                     <input type="number" name="phoneno" required><br>
                     <label>العنوان </label><br>
                     <input type="text" name="address" required><br>
+                     <label>المدينة</label><br>
+                <select name="city" style="border-radius:5px">
+                    <option value="العين">العين</option>
+                    <option value="الهير">الهير</option>
+                    <option value="الفقع">الفقع</option>
+                    <option value="سويحان">سويحان</option>
+                    <option value="ناهل">ناهل</option>
+                    <option value="مدينه اخرى">مدينه اخرى</option>
+                </select><br>
                     <label> رابط Google map (إختياري)</label><br>
                     <input type="url" name="home_locate"><br>
                     <input type="submit" class="login" value="إضافة">
+
                 </form>
             </div>
         </div>
@@ -79,24 +90,7 @@
 
 
          <!--footer start-->
-         <div class="footer">
-            <!--<div class="container">-->
-                <div class="taking-footer">
 
-                    <div class="taking-links">
-                        <a href="#">سياسة الخصوصية</a>
-                        <a href="#">تواصل معنـا </a>
-                        <a href="#">الشروط والأحكام </a>
-                        <a href="#"> الرئيـسية</a>
-                    </div>
-                    <div class="log">
-                      <img src="{% static 'images/tenten.png' %}" height="75px" width="75px"><br>
-                      <small>All Rights Reserved 2024<i class="fa-regular fa-copyright"></i></small>
-                      <br><small>Developed by Ahmd Babiker</small>
-                  </div>
-                </div>
-
-        </div>
     <!--footer end-->
     <!--footer -->
 

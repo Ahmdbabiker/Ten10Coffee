@@ -66,24 +66,23 @@
                             <h2>العنوان ورقم الهاتف</h2>
                             <label>الإسم</label>
                             <input type="text" name="name" required value="{{ user_data.user.username }}" {% if user.is_authenticated %} readonly {% endif %}>
-                            
+
                             <label>رقم الهاتف</label>
                             <input type="number" required placeholder="01234567" name="phoneno" {% if user.is_authenticated %} readonly {% endif %} value="{{ user_data.phone_number }}">
-                            
+
                             <label>العنوان</label>
                             <input type="text" name="address" required {% if user.is_authenticated %} readonly {% endif %} value="{{ user_data.address }}">
 
                             <!-- Pickup Option -->
-                            <div class="lbel">
-                                <label for="pickup">إستلام من المحل؟</label>
+                            <div class="lbel" style="margin:7px 0">
+                                <label for="pickup" style="width:148px">إستلام من المحل؟</label>
                                 {% if request.user.is_superuser or request.user.is_staff %}
                                     <input type="checkbox" name="pickup" value="yes" id="mjk" checked disabled>
                                 {% else %}
                                     <input type="checkbox" name="pickup" value="yes" id="mjk">
                                 {% endif %}
                             </div>
-                            <label for="notes">ملاحظات:</label>
-                            <textarea name="notes" class="ship-forms" placeholder="اضف ملاحظاتك علي الطلب"></textarea>
+                            <textarea name="notes" class="ship-forms" style="border-radius:8px;border:1px solid lightgray" placeholder="اضف ملاحظاتك علي الطلب"></textarea>
                             <br>
                             <!-- Edit Shipping Details -->
                             {% if user.is_authenticated %}
@@ -91,9 +90,9 @@
                             {% endif %}
                         </div>
 
-            
+
                         <!-- Cart Products Section -->
-                         <hr class="mt-2">
+                         <hr style="margin:5px 0" color="lightgray">
                         <h2 class="mt-2">تفاصيل طلبك</h2>
                         {% for product in cart_products %}
                             <div class="product-details">
@@ -108,7 +107,7 @@
                                 </small>
                             </div>
                         {% endfor %}
-            
+
                         <!-- Extras Section -->
                         <h3>الإضافات</h3>
                         {% for item in products_with_extras %}
@@ -120,7 +119,7 @@
                                             <input type="checkbox" name="extra__{{ item.product.id }}__{{ extra.id }}" value="{{ extra.id }}">
                                             {{ extra.name }} - ({{ extra.price }}) د.إ
                                         </label>
-            
+
                                         <!-- Display all options without toggling -->
                                         <div>
                                             <label style="color:gray;font-size:15px">
@@ -147,17 +146,17 @@
                                 {% endfor %}
                             </div>
                         {% endfor %}
-            
+
                         <!-- Submit Button -->
-                        <input type="submit" 
-                               style="width: 100%; background-color: rgb(34, 34, 34); color: white; font-size: 20px; text-align: center; border: none; border-radius: 8px; margin-top: 7px;" 
+                        <input type="submit"
+                               style="width: 100%; background-color: rgb(34, 34, 34); color: white; font-size: 20px; text-align: center; border: none; border-radius: 8px; margin-top: 7px;"
                                value="إستمـرار">
                     </form>
                 </div>
             </div>
-            
 
-            
+
+
         </div>
     </div>
 </div>
@@ -194,11 +193,11 @@
     <!--footer -->
 
 
-    
-    
-    
-    
-    
+
+
+
+
+
 
 
 </html>
