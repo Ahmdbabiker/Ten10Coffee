@@ -86,25 +86,14 @@
                 </div>
 
                 <div class="billing">
-                    <p class="bilb">الطلب رقم:-</p>
-                    {% if request.user.is_superuser or pickup %}
-                    <p class="bilb">قيمة التوصيل : مجـاناً</p>
-                    {% else %}
-                        {% if unknown_user.city == 'her' %}
+                    {% if request.user.is_authenticated %}
+                        {% if request.user.is_superuser or pickup %}
                         <p class="bilb">قيمة التوصيل : مجـاناً</p>
-                        {% elif unknown_user.city == 'aen' %}
-                        <p class="bilb">قيمة التوصيل : 100 د.إ</p>
-                        {% elif unknown_user.city == 'sh' %}
-                        <p class="bilb">قيمة التوصيل : 30 د.إ</p>
-                        {% elif unknown_user.city == 'fq' %}
-                        <p class="bilb">قيمة التوصيل : 30 د.إ</p>
-                        {% elif unknown_user.city == 'nah' %}
-                        <p class="bilb">قيمة التوصيل : 40 د.إ</p>
-                        {% elif unknown_user.city == 'sw' %}
-                        <p class="bilb">قيمة التوصيل : 50 د.إ</p>
-                        {% elif unknown_user.city == 'other' %}
-                        <p class="bilb">قيمة التوصيل : تحدد من قبل المحل</p>
+                        {% else %}
+                            <p class="bilb">قيمة التوصيل : {% if session_data.shipping_price == '0.00' %}مجانا{% else %}{{ session_data.shipping_price }} د.إ{% endif %}</p>
                         {% endif %}
+                    {% else %}
+                        <p class="bilb">قيمة التوصيل : {% if unknown_user.shipping_price == '0.00' %}مجانا{% else %}{{ unknown_user.shipping_price }} د.إ{% endif %}</p>
                     {% endif %}
                     <h3 class="nm" style="background-color: transparent;">المجـموع: {{total}} د.إ</h3>
                 </div>

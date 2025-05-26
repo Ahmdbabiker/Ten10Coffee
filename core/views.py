@@ -13,10 +13,10 @@ from django.http import JsonResponse, StreamingHttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
-from django.views.generic import CreateView, UpdateView
+from django.views.generic import CreateView, UpdateView, ListView, DeleteView
 from order.models import *
 
-from .forms import ProductForm
+from .forms import ProductForm, CityForm
 from .models import *
 
 # Create your views here.
@@ -438,3 +438,57 @@ def all_users(request):
     return render(request , 'users.html' , data)
 
 
+class CityCreateView(LoginRequiredMixin,
+                     UserPassesTestMixin,
+                     SuccessMessageMixin,
+                     CreateView):
+    model = City
+    template_name = 'add_edit_city.html'
+    success_url = reverse_lazy("admindash")
+    success_message = "تمت الإضافة"
+    form_class = CityForm
+
+    def test_func(self):
+        user = self.request.user
+        if user.is_staff or user.is_superuser:
+            return True
+        return False
+
+
+class CityUpdateView(LoginRequiredMixin,
+                    UserPassesTestMixin,
+                    SuccessMessageMixin,
+                    UpdateView):
+    model = City
+    template_name = 'add_edit_city.html'
+    success_url = reverse_lazy("admindash")
+    success_message = "تم التعديل"
+    form_class = CityForm
+
+    def test_func(self):
+        user = self.request.user
+        if user.is_staff or user.is_superuser:
+            return True
+        return False
+
+
+class CityListView(LoginRequiredMixin, ListView):
+    model = City
+    template_name = 'city_admin.html'
+    context_object_name = 'cities'
+
+
+class CityDeleteView(LoginRequiredMixin,
+                     UserPassesTestMixin,
+                     SuccessMessageMixin,
+                     DeleteView):
+    model = City
+    template_name = 'delete_city.html'
+    success_url = reverse_lazy('admindash')
+    success_message = 'تم حذف المدينة'
+
+    def test_func(self):
+        user = self.request.user
+        if user.is_staff or user.is_superuser:
+            return True
+        return False

@@ -76,17 +76,13 @@
                             
                             <label>المدينة</label>
                             {% if user.is_authenticated %}
-                            <input type="text" name="address" required readonly value="{% if user_data.city %}{{ user_data.get_city_display }}{% else %}لم تحدد{% endif %}">
+                            <input type="text" name="address" required readonly value="{% if user_data.city %}{{ user_data.city.name }}{% else %}لم تحدد{% endif %}">
                             {% else %}
                             <br>
                             <select name="city" id="city">
-                                <option value="her">الهير (التوصيل مجاناً)</option>
-                                <option value="aen">العين (100 د.إ رسوم التوصيل)</option>
-                                <option value="sh">الشويب (30 د.إ رسوم التوصيل)</option>
-                                <option value="fq">الفقع (30 د.إ رسوم التوصيل )</option>
-                                <option value="nah">ناهل (40 د.إ رسوم التوصيل )</option>
-                                <option value="sw">سويحان (50 د.إ رسوم التوصيل)</option>
-                                <option value="other">اخرى (تحدد من قبل المحل)</option>
+                                {% for city in cities %}
+                                <option value="{{city.id}}">{{ city.name }} - {{city.shipping_price}} د.إ</option>
+                                {% endfor %}
                               </select>
                             {% endif %}
                               <br>

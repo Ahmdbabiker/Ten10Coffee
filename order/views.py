@@ -61,37 +61,17 @@ def process_order(request):
             phone = user_data.get('phoneno')
             pickup = user_data.get('pickup') == "yes"
             notes = user_data.get('notes')
-            city = user_data.get('city')
-            if city == 'her':
-                shipping = Decimal(0.00)
-                shipping_city = "الهير"
-            elif city == 'aen':
-                shipping = Decimal(100.00)
-                shipping_city = "العين"
-            elif city == 'sh':
-                shipping = Decimal(30.00)
-                shipping_city = "الشويب"
-            elif city == 'fq':
-                shipping = Decimal(30.00)
-                shipping_city = "الفقع"
-            elif city == 'nah':
-                shipping = Decimal(40.00)
-                shipping_city = "ناهل"
-            elif city == 'sw':
-                shipping = Decimal(50.00)
-                shipping_city = "سويحان"
-            elif city == 'other':
-                shipping = Decimal(0.00)
-                shipping_city = "اخرى"
+            shipping_city = user_data.get('city')
+            shipping_price = Decimal(user_data.get('shipping_price'))
             if pickup:
-                shipping = Decimal(0.00)
-            amount_paid += shipping
+                shipping_price = Decimal(0.00)
+            amount_paid += shipping_price
             # Create the order
             create_order = Order.objects.create(
                 user=user,
                 shipping_address=shipping_address,
                 amount_paid=amount_paid,
-                shipping_amount=shipping,
+                shipping_amount=shipping_price,
                 shipping_city=shipping_city,
                 phone_number=phone,
                 pickup=pickup,
@@ -148,36 +128,16 @@ def process_order(request):
             unknown_user_name = user_data.get("name")
             notes = user_data.get("notes")
             pickup = user_data.get('pickup') == "yes"
-            city = user_data.get('city')
-            if city == 'her':
-                shipping = Decimal(0.00)
-                shipping_city = "الهير"
-            elif city == 'aen':
-                shipping = Decimal(100.00)
-                shipping_city = "العين"
-            elif city == 'sh':
-                shipping = Decimal(30.00)
-                shipping_city = "الشويب"
-            elif city == 'fq':
-                shipping = Decimal(30.00)
-                shipping_city = "الفقع"
-            elif city == 'nah':
-                shipping = Decimal(40.00)
-                shipping_city = "ناهل"
-            elif city == 'sw':
-                shipping = Decimal(50.00)
-                shipping_city = "سويحان"
-            elif city == 'other':
-                shipping = Decimal(0.00)
-                shipping_city = "اخرى"
+            shipping_city = user_data.get('city')
+            shipping_price = Decimal(user_data.get('shipping_price'))
             if pickup:
-                shipping = Decimal(0.00)
-            amount_paid += shipping
+                shipping_price = Decimal(0.00)
+            amount_paid += shipping_price
             # Create the order for the guest user
             create_order = Order.objects.create(
                 shipping_address=shipping_address,
                 amount_paid=amount_paid,
-                shipping_amount=shipping,
+                shipping_amount=shipping_price,
                 shipping_city=shipping_city,
                 phone_number=phone,
                 unknown_user=unknown_user_name,

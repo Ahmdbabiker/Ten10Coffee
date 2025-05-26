@@ -16,14 +16,23 @@ CITY_CHOICES = [
     ('other', 'اخرى (تحدد من قبل المحل)'),
 ]
 
+class City(models.Model):
+    name = models.CharField('اسم المدينة',max_length=255, blank=True, null=True)
+    shipping_price = models.DecimalField('رسوم التوصيل',max_digits=7, decimal_places=2, blank=True, null=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Profile(models.Model):
     user = models.OneToOneField(User , on_delete=models.CASCADE)
-    city = models.CharField(max_length=255, blank=True, null=True, choices=CITY_CHOICES)
+    city = models.ForeignKey(City, on_delete=models.CASCADE, blank=True, null=True)
     address = models.CharField(max_length=255)
     phone_number = models.CharField(max_length=10, blank=True, null=True,
                                     validators=[RegexValidator(r'^\d{1,10}$'),
                                                 MinLengthValidator(10)])
     home_location = models.URLField(null=True , blank=True)
+
 
 @receiver(post_save , sender = User)
 def create_profile(sender , instance , created , **kwargs):

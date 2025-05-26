@@ -5,7 +5,7 @@ from django.http import JsonResponse
 from datetime import datetime
 from decimal import Decimal
 from django.contrib import messages
-from core.models import Extra
+from core.models import Extra, City
 # Create your views here.
 
 
@@ -108,7 +108,8 @@ def customer_data(request):
             form_data = {
                 'phoneno': user_data.phone_number,
                 'address': user_data.address,
-                'city': user_data.city,
+                'city': user_data.city.name,
+                'shipping_price': str(user_data.city.shipping_price),
             }
             request.session['user_data'] = form_data
 
@@ -212,26 +213,14 @@ def billing_details(request):
             request.session["user_data"] = user_data
             pickup = user_data.get('pickup') == "yes"
             city = user_data['city']
+            shipping_price = Decimal(user_data['shipping_price'])
+            
             if not city or not user_data["phoneno"] or not user_data["address"]:
                 messages.error(request, "ييجب تعديل بيانات حسابك اولا")
                 return redirect('customer_data')
-            if city == 'her':
-                shipping = Decimal(0.00)
-            elif city == 'aen':
-                shipping = Decimal(100.00)
-            elif city == 'sh':
-                shipping = Decimal(30.00)
-            elif city == 'fq':
-                shipping = Decimal(30.00)
-            elif city == 'nah':
-                shipping = Decimal(40.00)
-            elif city == 'sw':
-                shipping = Decimal(50.00)
-            elif city == 'other':
-                shipping = Decimal(0.00)
             if pickup:
-                shipping = Decimal(0.00)
-            total+= shipping
+                shipping_price = Decimal(0.00)
+            total+= shipping_price
             data = {
                 "session_data": user_data,
                 "cart_products": cart_products,
@@ -248,24 +237,15 @@ def billing_details(request):
             if not city or not phone_no or not request.POST.get("address"):
                 messages.error(request, "برجاء ادخال بياناتك اولا")
                 return redirect("customer_data")
-
-            if city == 'her':
-                shipping = Decimal(0.00)
-            elif city == 'aen':
-                shipping = Decimal(100.00)
-            elif city == 'sh':
-                shipping = Decimal(30.00)
-            elif city == 'fq':
-                shipping = Decimal(30.00)
-            elif city == 'nah':
-                shipping = Decimal(40.00)
-            elif city == 'sw':
-                shipping = Decimal(50.00)
-            elif city == 'other':
-                shipping = Decimal(0.00)
+            try:
+                city_obj = City.objects.get(id=city)
+                shipping_price = city_obj.shipping_price
+            except City.DoesNotExist:
+                messages.error(request, "المدينة المختارة غير موجودة, برجاء التحديث")
+                return redirect("customer_data")
             if pickup:
-                shipping = Decimal(0.00)
-            total+= shipping
+                shipping_price = Decimal(0.00)
+            total+= shipping_price
             if phone_length == 10:
                 correct_phone = phone_no
             else:
@@ -275,7 +255,8 @@ def billing_details(request):
             request.session["unknown_user"] = {
                 "name": request.POST.get("name"),
                 "phone_no": correct_phone,
-                "city": request.POST.get("city"),
+                "city": city_obj.name,
+                "shipping_price": str(shipping_price),
                 "address": request.POST.get("address"),
                 "pickup": request.POST.get("pickup"),
                 "notes": request.POST.get("notes"),
