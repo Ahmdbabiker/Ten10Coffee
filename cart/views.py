@@ -105,11 +105,18 @@ def customer_data(request):
         # For authenticated users, retrieve and pass user data
         if request.user.is_authenticated:
             user_data = Profile.objects.get(user__id=request.user.id)
+            if user_data.city:
+                city_name = user_data.city.name
+                shipping_price = user_data.city.shipping_price
+            else:
+                city_name = None
+                shipping_price = 0.00
+
             form_data = {
                 'phoneno': user_data.phone_number,
                 'address': user_data.address,
-                'city': user_data.city.name,
-                'shipping_price': str(user_data.city.shipping_price),
+                'city': city_name,
+                'shipping_price': str(shipping_price),
             }
             request.session['user_data'] = form_data
 
@@ -213,7 +220,10 @@ def billing_details(request):
             request.session["user_data"] = user_data
             pickup = user_data.get('pickup') == "yes"
             city = user_data['city']
-            shipping_price = Decimal(user_data['shipping_price'])
+            shipping_price = user_data['shipping_price']
+            if not shipping_price:
+                shipping_price = 0.00
+            shipping_price = Decimal(shipping_price)
             
             if not city or not user_data["phoneno"] or not user_data["address"]:
                 messages.error(request, "ييجب تعديل بيانات حسابك اولا")
