@@ -107,7 +107,8 @@ def customer_data(request):
             user_data = Profile.objects.get(user__id=request.user.id)
             form_data = {
                 'phoneno': user_data.phone_number,
-                'address': user_data.address
+                'address': user_data.address,
+                'city': user_data.city,
             }
             request.session['user_data'] = form_data
 
@@ -209,6 +210,28 @@ def billing_details(request):
             user_data["pickup"] = request.POST.get("pickup")
             user_data["notes"] = request.POST.get("notes")
             request.session["user_data"] = user_data
+            pickup = user_data.get('pickup') == "yes"
+            city = user_data['city']
+            if not city or not user_data["phoneno"] or not user_data["address"]:
+                messages.error(request, "ييجب تعديل بيانات حسابك اولا")
+                return redirect('customer_data')
+            if city == 'her':
+                shipping = Decimal(0.00)
+            elif city == 'aen':
+                shipping = Decimal(100.00)
+            elif city == 'sh':
+                shipping = Decimal(30.00)
+            elif city == 'fq':
+                shipping = Decimal(30.00)
+            elif city == 'nah':
+                shipping = Decimal(40.00)
+            elif city == 'sw':
+                shipping = Decimal(50.00)
+            elif city == 'other':
+                shipping = Decimal(0.00)
+            if pickup:
+                shipping = Decimal(0.00)
+            total+= shipping
             data = {
                 "session_data": user_data,
                 "cart_products": cart_products,
@@ -217,9 +240,42 @@ def billing_details(request):
             }
             return render(request, "billing.html", data)
         else:
+            phone_no = request.POST.get("phoneno")
+            cleaned_phone = ''.join(filter(str.isdigit, phone_no))
+            phone_length = len(cleaned_phone)
+            pickup = request.POST.get("pickup") == "yes"
+            city = request.POST.get("city")
+            if not city or not phone_no or not request.POST.get("address"):
+                messages.error(request, "برجاء ادخال بياناتك اولا")
+                return redirect("customer_data")
+
+            if city == 'her':
+                shipping = Decimal(0.00)
+            elif city == 'aen':
+                shipping = Decimal(100.00)
+            elif city == 'sh':
+                shipping = Decimal(30.00)
+            elif city == 'fq':
+                shipping = Decimal(30.00)
+            elif city == 'nah':
+                shipping = Decimal(40.00)
+            elif city == 'sw':
+                shipping = Decimal(50.00)
+            elif city == 'other':
+                shipping = Decimal(0.00)
+            if pickup:
+                shipping = Decimal(0.00)
+            total+= shipping
+            if phone_length == 10:
+                correct_phone = phone_no
+            else:
+                messages.error(request, "رقم الهاتف يجب ان يحتوي علي 10 ارقام")
+                return redirect("customer_data")
+
             request.session["unknown_user"] = {
                 "name": request.POST.get("name"),
-                "phone_no": request.POST.get("phoneno"),
+                "phone_no": correct_phone,
+                "city": request.POST.get("city"),
                 "address": request.POST.get("address"),
                 "pickup": request.POST.get("pickup"),
                 "notes": request.POST.get("notes"),
@@ -228,6 +284,7 @@ def billing_details(request):
                 "cart_products": cart_products,
                 "quantities": quantities,
                 "total": total,
+                "unknown_user": request.session["unknown_user"]
             }
             return render(request, "billing.html", data)
 

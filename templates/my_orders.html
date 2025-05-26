@@ -140,7 +140,7 @@
                 <div class="link-tab">
 
                     {% if request.user.is_authenticated%}
-                    <a href="{% url 'edit_shiping_phone' request.user.id %}" style="color:black">
+                    <a href="{% url 'edit_shiping_phone' %}" style="color:black">
                     <i class="fas fa-user"></i><br>
                     <small>{{user.username}}</small>
                     </a>

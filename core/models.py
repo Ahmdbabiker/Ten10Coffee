@@ -1,14 +1,28 @@
-from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MinLengthValidator, RegexValidator
+from django.db import models
+from django.db.models import Avg
 from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
-from django.db.models import Avg
+
+CITY_CHOICES = [
+    ('her', 'الهير (التوصيل مجاناً)'),
+    ('aen', 'العين (100 د.إ رسوم التوصيل)'),
+    ('sh', 'الشويب (30 د.إ رسوم التوصيل)'),
+    ('fq', 'الفقع (30 د.إ رسوم التوصيل )'),
+    ('nah', 'ناهل (40 د.إ رسوم التوصيل )'),
+    ('sw', 'سويحان (50 د.إ رسوم التوصيل)'),
+    ('other', 'اخرى (تحدد من قبل المحل)'),
+]
 
 class Profile(models.Model):
     user = models.OneToOneField(User , on_delete=models.CASCADE)
+    city = models.CharField(max_length=255, blank=True, null=True, choices=CITY_CHOICES)
     address = models.CharField(max_length=255)
-    phone_number = models.IntegerField(null=True)
+    phone_number = models.CharField(max_length=10, blank=True, null=True,
+                                    validators=[RegexValidator(r'^\d{1,10}$'),
+                                                MinLengthValidator(10)])
     home_location = models.URLField(null=True , blank=True)
 
 @receiver(post_save , sender = User)

@@ -1,24 +1,23 @@
-from django.shortcuts import render , redirect ,  get_object_or_404
-from .models import *
-from django.contrib import messages
-from django.db.models import Avg
-from order.models import *
-from django.db.models import Sum
-from django.utils import timezone
-import time
-from django.views.generic import CreateView, UpdateView
-from datetime import timedelta
-from django.core.paginator import Paginator
-from django.http import JsonResponse
-from django.http import StreamingHttpResponse
-from django.contrib.messages.views import SuccessMessageMixin
-from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 import json
+import time
+from datetime import timedelta
 from urllib.parse import urlencode
-from order.models import *
-from .forms import ProductForm
-from django.urls import reverse_lazy
 
+from accounts.forms import ProfileForm
+from django.contrib import messages
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.core.paginator import Paginator
+from django.db.models import Avg, Sum
+from django.http import JsonResponse, StreamingHttpResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse_lazy
+from django.utils import timezone
+from django.views.generic import CreateView, UpdateView
+from order.models import *
+
+from .forms import ProductForm
+from .models import *
 
 # Create your views here.
 
@@ -355,9 +354,32 @@ def order_done(request):
     data = {"order_id":get_session ,"whatsapp_link":whatsapp_link }
     return render(request , "order_done.html" , data)
 
+
+class ProfileUpdateView(LoginRequiredMixin,
+                        SuccessMessageMixin,
+                        UpdateView):
+    model = Profile
+    template_name = 'edit_ship_details.html'
+    success_url = reverse_lazy("home")
+    success_message = "تم تعديل البيانات"
+    form_class = ProfileForm
+
+    def get_object(self):
+        current_user = self.request.user.id
+        obj = Profile.objects.get(user__id = current_user)
+        return obj
+
+
 def edit_shiping_phone(request , user_id):
     current_user = request.user.id
     grap_user = Profile.objects.get(user__id = current_user)
+    profile_form = ProfileForm(request.POST, instance=grap_user)
+    if request.method == "POST":
+        if profile_form.is_valid():
+            profile_form.save()
+    else:
+        profile_form = ProfileForm(instance=grap_user)
+        
     if request.method == "POST":
         phoneno = request.POST.get("phoneno")
         address = request.POST.get("address")
@@ -370,7 +392,10 @@ def edit_shiping_phone(request , user_id):
         grap_user.save()
         messages.success(request , "تم تعديل البيانات")
         return redirect("home")
-    data = {"grap_user":grap_user}
+    data = {
+        "grap_user":grap_user,
+        "form": profile_form
+        }
     return render(request , 'edit_ship_details.html' , data)
 
 def dicounts(request):

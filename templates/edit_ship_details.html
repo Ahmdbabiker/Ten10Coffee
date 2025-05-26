@@ -38,7 +38,7 @@
             </a></li>
             {% if request.user.is_authenticated %}
 
-            <li><a href="{% url 'edit_shiping_phone' request.user.id %}">{{request.user.username}}</a></li>
+            <li><a href="{% url 'edit_shiping_phone' %}">{{request.user.username}}</a></li>
             <li><a href="{% url 'signout' %}">خروج</a></li>
             <li><a href="{% url 'myorders' request.user.id %}">طلباتي</a></li>
             {%else%}
@@ -61,6 +61,43 @@
             <div class="title-form">
                 <form method="POST">
                     {% csrf_token %}
+                    <div class="form-group">
+                        <label for="{{ form.phone_number.id_for_label }}">رقم الهاتف</label><br>
+                        {{ form.phone_number }}
+                        {% if form.phone_number.errors %}
+                            <div class="error">
+                                {{ form.phone_number.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.city.id_for_label }}">المدينة</label><br>
+                        {{ form.city }}
+                        {% if form.city.errors %}
+                            <div class="error">
+                                {{ form.city.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.address.id_for_label }}">العنوان</label><br>
+                        {{ form.address }}
+                        {% if form.address.errors %}
+                            <div class="error">
+                                {{ form.address.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.home_location.id_for_label }}">رابط Google map (إختياري)</label><br>
+                        {{ form.home_location }}
+                        {% if form.home_location.errors %}
+                            <div class="error">
+                                {{ form.home_location.errors }}
+                            </div>
+                        {% endif %}
+                    </div>
+                    {% comment %}
                     <label>رقم الهاتف </label><br>
                     <input type="number" name="phoneno" value="{{grap_user.phone_number}}"><br>
                     <label>العنوان </label><br>
@@ -73,6 +110,7 @@
 
                     {%endif%}
                     "><br>
+                    {% endcomment %}
                     <input type="submit" class="login" value="تعديل">
                 </form>
             </div>

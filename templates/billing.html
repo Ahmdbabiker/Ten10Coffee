@@ -90,10 +90,23 @@
                     {% if request.user.is_superuser or pickup %}
                     <p class="bilb">قيمة التوصيل : مجـاناً</p>
                     {% else %}
-                    <p class="bilb">قيمة التوصيل : مجـاناً</p>
-
+                        {% if unknown_user.city == 'her' %}
+                        <p class="bilb">قيمة التوصيل : مجـاناً</p>
+                        {% elif unknown_user.city == 'aen' %}
+                        <p class="bilb">قيمة التوصيل : 100 د.إ</p>
+                        {% elif unknown_user.city == 'sh' %}
+                        <p class="bilb">قيمة التوصيل : 30 د.إ</p>
+                        {% elif unknown_user.city == 'fq' %}
+                        <p class="bilb">قيمة التوصيل : 30 د.إ</p>
+                        {% elif unknown_user.city == 'nah' %}
+                        <p class="bilb">قيمة التوصيل : 40 د.إ</p>
+                        {% elif unknown_user.city == 'sw' %}
+                        <p class="bilb">قيمة التوصيل : 50 د.إ</p>
+                        {% elif unknown_user.city == 'other' %}
+                        <p class="bilb">قيمة التوصيل : تحدد من قبل المحل</p>
+                        {% endif %}
                     {% endif %}
-                    <h3 class="nm" style="background-color: transparent;">المجـموع:           {{total}} د.إ</h3>
+                    <h3 class="nm" style="background-color: transparent;">المجـموع: {{total}} د.إ</h3>
                 </div>
                 <form method="POST" action="{% url 'process_order' %}">
                     {% csrf_token %}

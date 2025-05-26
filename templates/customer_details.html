@@ -50,7 +50,11 @@
     </nav>
     <!--navbar ending-->
     <!--navbar ending-->
-
+    <div id="message-container">
+        {% for m in messages %}
+            <p class="messages">{{ m }}</p>
+        {% endfor %}
+    </div>
 
 <!-- shipping and payment -->
 <div class="shipping">
@@ -69,7 +73,23 @@
 
                             <label>رقم الهاتف</label>
                             <input type="number" required placeholder="01234567" name="phoneno" {% if user.is_authenticated %} readonly {% endif %} value="{{ user_data.phone_number }}">
-
+                            
+                            <label>المدينة</label>
+                            {% if user.is_authenticated %}
+                            <input type="text" name="address" required readonly value="{% if user_data.city %}{{ user_data.get_city_display }}{% else %}لم تحدد{% endif %}">
+                            {% else %}
+                            <br>
+                            <select name="city" id="city">
+                                <option value="her">الهير (التوصيل مجاناً)</option>
+                                <option value="aen">العين (100 د.إ رسوم التوصيل)</option>
+                                <option value="sh">الشويب (30 د.إ رسوم التوصيل)</option>
+                                <option value="fq">الفقع (30 د.إ رسوم التوصيل )</option>
+                                <option value="nah">ناهل (40 د.إ رسوم التوصيل )</option>
+                                <option value="sw">سويحان (50 د.إ رسوم التوصيل)</option>
+                                <option value="other">اخرى (تحدد من قبل المحل)</option>
+                              </select>
+                            {% endif %}
+                              <br>
                             <label>العنوان</label>
                             <input type="text" name="address" required {% if user.is_authenticated %} readonly {% endif %} value="{{ user_data.address }}">
 
@@ -86,7 +106,7 @@
                             <br>
                             <!-- Edit Shipping Details -->
                             {% if user.is_authenticated %}
-                                <a href="{% url 'edit_shiping_phone' user_data.id %}" style="color: rgb(212, 41, 41); font-size: 19px;">تعديل البيانات</a><br>
+                                <a href="{% url 'edit_shiping_phone' %}" style="color: rgb(212, 41, 41); font-size: 19px;">تعديل البيانات</a><br>
                             {% endif %}
                         </div>
 

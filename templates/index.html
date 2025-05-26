@@ -40,7 +40,7 @@
             </a></li>
             {% if request.user.is_authenticated %}
 
-            <li><a href="{% url 'edit_shiping_phone' request.user.id %}">{{request.user.username}}</a></li>
+            <li><a href="{% url 'edit_shiping_phone' %}">{{request.user.username}}</a></li>
             <li><a href="{% url 'signout' %}">خروج</a></li>
             <li><a href="{% url 'myorders' request.user.id %}">طلباتي</a></li>
             {%else%}
@@ -230,7 +230,7 @@
                 <div class="link-tab">
 
                     {% if request.user.is_authenticated%}
-                    <a href="{% url 'edit_shiping_phone' request.user.id %}" style="color:black">
+                    <a href="{% url 'edit_shiping_phone' %}" style="color:black">
                     <i class="fas fa-user"></i><br>
                     <small>{{user.username|truncatechars:7}}</small>
                     </a>

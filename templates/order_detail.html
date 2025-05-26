@@ -60,7 +60,9 @@
         {% if order.user.is_superuser or order.user.is_staff %}
             <p style="color:red;font-weight:bold">طلب سيارة</p>
         {% endif %}
+        <p>المدينة : {{ order.shipping_city }}</p>
         <p>العنوان : {{ order.shipping_address }}</p>
+        <p>رسوم التوصيل : {{ order.shipping_amount }} د.إ</p>
         <p>المبلغ المستحق : {{ order.amount_paid }} د.إ</p>
         <p>رقم الهاتف : {{ order.phone_number }}</p>
         {% if not order.user.is_superuser%}
