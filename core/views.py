@@ -16,7 +16,7 @@ from django.utils import timezone
 from django.views.generic import CreateView, UpdateView, ListView, DeleteView
 from order.models import *
 
-from .forms import ProductForm, CityForm
+from .forms import ProductForm, CityForm, MaintenanceModeForm
 from .models import *
 
 # Create your views here.
@@ -69,6 +69,8 @@ def meal_details(request , slug_name):
 
 def admindash(request):
     if request.user.is_superuser or request.user.is_staff:
+        maintenance_obj = MaintenanceMode.objects.first()
+        maintenance_status = maintenance_obj.on
         products = Product.objects.all().count()
         rate = Rating.objects.all()
         rate_Avg = rate.aggregate(Avg('rate'))
@@ -80,7 +82,7 @@ def admindash(request):
         total_formatted = f"{total:.2f}"
         data = {"products":products , "rate":rate_extrcated ,
         "orders":orders , "users":users , "best_seller":best_seller ,
-        "total":total_formatted}
+        "total":total_formatted, "maintenance_status":maintenance_status}
 
     else:
         messages.error(request, "دخول خاطئ")
@@ -486,6 +488,29 @@ class CityDeleteView(LoginRequiredMixin,
     template_name = 'delete_city.html'
     success_url = reverse_lazy('admindash')
     success_message = 'تم حذف المدينة'
+
+    def test_func(self):
+        user = self.request.user
+        if user.is_staff or user.is_superuser:
+            return True
+        return False
+
+
+def maintenance_view(request):
+    maintenance_obj = MaintenanceMode.objects.first()
+    maintenance_status = maintenance_obj.on
+    return render(request, "maintenance.html", {"maintenance_status":maintenance_status}, status=503)
+
+
+class MaintenanceModeUpdate(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, UpdateView):
+    model = MaintenanceMode
+    template_name = 'update_maintenance.html'
+    success_url = reverse_lazy("admindash")
+    success_message = "تمت التعديل"
+    form_class = MaintenanceModeForm
+
+    def get_object(self):
+        return MaintenanceMode.objects.first()
 
     def test_func(self):
         user = self.request.user

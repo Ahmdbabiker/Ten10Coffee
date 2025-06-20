@@ -6,6 +6,7 @@ from core.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('maintenance/', maintenance_view, name='maintenance'),
     path('' , home , name='home'),
     path('meal_detials/<slug:slug_name>/' ,meal_details , name="meal_detail"),
     path('accounts/' , include('accounts.urls')),
@@ -14,6 +15,7 @@ urlpatterns = [
     path('admin_dashboard/' , admindash , name="admindash"),
     path('admin_dashboard/cities/' , CityListView.as_view() , name="city_admin"),
     path('admin_dashboard/add-city/' , CityCreateView.as_view() , name="add_city"),
+    path('admin_dashboard/update-maintenance/' , MaintenanceModeUpdate.as_view() , name="update_maintenance"),
     path('admin_dashboard/update-city/<int:pk>/' , CityUpdateView.as_view(), name="update_city"),
     path('admin_dashboard/delete-city/<int:pk>/' , CityDeleteView.as_view(), name="delete_city"),
     path('admin_dashboard/admin_orders/<int:order_type>/' , admin_orders , name="admin_orders"),

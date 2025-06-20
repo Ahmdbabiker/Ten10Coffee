@@ -43,6 +43,7 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'corsheaders.middleware.CorsMiddleware',
+    'core.middleware.maintenance.MaintenanceModeMiddleware',
 ]
 #
 #CORS_ALLOWED_ORIGINS = [
@@ -151,3 +152,5 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Where uploaded media files are s
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+MAINTENANCE_REDIRECT_URL = '/maintenance/'

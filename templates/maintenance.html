@@ -1,0 +1,55 @@
+{% if maintenance_status %}
+<!DOCTYPE html>
+<html>
+<head>
+    <title>اننا خارج وقت العمل حاليا</title>
+</head>
+<body>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: Arial, sans-serif;
+        }
+        .page-wrap {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            min-height: 60vh;
+            background-color: #f8f9fa;
+        }
+        .container {
+            width: 100%;
+            max-width: 1140px;
+            padding: 0 15px;
+            margin: 0 auto;
+        }
+        .row {
+            display: flex;
+            justify-content: center;
+            margin: 0 -15px;
+        }
+        .col-md-12 {
+            flex: 0 0 100%;
+            max-width: 100%;
+            padding: 0 15px;
+            text-align: center;
+        }
+
+    </style>
+    <div class="page-wrap">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>اننا خارج وقت العمل حاليا</h1>
+                    <p>يرجى المحاولة في وقت اخر</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+{% else %}
+{% include '404.html' %}
+{% endif %}

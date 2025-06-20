@@ -1,5 +1,5 @@
 from django import forms
-from .models import Product, City
+from .models import Product, City, MaintenanceMode
 
 class ProductForm(forms.ModelForm):
 
@@ -17,3 +17,10 @@ class CityForm(forms.ModelForm):
     class Meta:
         model = City
         fields = ["name", "shipping_price"]
+
+
+class MaintenanceModeForm(forms.ModelForm):
+
+    class Meta:
+        model = MaintenanceMode
+        fields = ["on"]

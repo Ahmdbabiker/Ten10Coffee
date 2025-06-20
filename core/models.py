@@ -104,3 +104,9 @@ class Rating(models.Model):
     def __str__(self):
         return f"{self.user_rated.username} Rated {self.product}"
 
+
+class MaintenanceMode(models.Model):
+    on = models.BooleanField("تفعيل وضع خارج الخدمة", default=False)
+
+    def __str__(self):
+        return str(self.on)
