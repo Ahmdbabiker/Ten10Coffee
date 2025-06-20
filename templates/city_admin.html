@@ -46,13 +46,13 @@
 
     <div class="control_panel">
         <div class="container">
-            <h2>المدن ورسوم التوصيل </h2>
+            <h2>رسوم التوصيل </h2>
             <div class="data">
-                <a href="{% url 'add_city' %}"> اضافة مدينة جديدة</a>
+                <a href="{% url 'add_city' %}"> اضافة منطقة توصيل جديدة</a>
                 <br>
                 {% for city in cities %}
-                {{ city.name }} {{ city.shipping_price }} د.إ 
-                
+                {{ city.name }} {{ city.shipping_price }} د.إ
+
             <a href="{% url 'update_city' city.pk %}">تعديل</a>
             <a href="{% url 'delete_city' city.pk %}">حذف</a>
             <br>

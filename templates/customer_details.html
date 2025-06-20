@@ -73,8 +73,8 @@
 
                             <label>رقم الهاتف</label>
                             <input type="number" required placeholder="01234567" name="phoneno" {% if user.is_authenticated %} readonly {% endif %} value="{{ user_data.phone_number }}">
-                            
-                            <label>المدينة</label>
+
+                            <label>المنطقة</label>
                             {% if user.is_authenticated %}
                             <input type="text" name="address" required readonly value="{% if user_data.city %}{{ user_data.city.name }}{% else %}لم تحدد{% endif %}">
                             {% else %}

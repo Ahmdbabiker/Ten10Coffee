@@ -6,6 +6,12 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils.text import slugify
 
+
+
+
+
+
+
 CITY_CHOICES = [
     ('her', 'الهير (التوصيل مجاناً)'),
     ('aen', 'العين (100 د.إ رسوم التوصيل)'),
@@ -36,7 +42,7 @@ class Profile(models.Model):
 
 @receiver(post_save , sender = User)
 def create_profile(sender , instance , created , **kwargs):
-    if created : 
+    if created :
         save_profile = Profile(user = instance)
         save_profile.save()
 
@@ -53,7 +59,7 @@ class Extra(models.Model):
 
     def __str__(self):
         return self.name
-    
+
     def extras(self):
         return Product.objects.filter(extras__id = self.id)
 

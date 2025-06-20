@@ -346,7 +346,7 @@ def order_done(request):
         query_params = urlencode({'text': message})
         whatsapp_link = f"{base_url}?{query_params}"
     else:
-        base_url = "https://wa.me/971563179971"
+        base_url = "https://wa.me/971504779748"
         message = f"Order ID: {get_session}"
         query_params = urlencode({'text': message})
         whatsapp_link = f"{base_url}?{query_params}"
@@ -379,7 +379,7 @@ def edit_shiping_phone(request , user_id):
             profile_form.save()
     else:
         profile_form = ProfileForm(instance=grap_user)
-        
+
     if request.method == "POST":
         phoneno = request.POST.get("phoneno")
         address = request.POST.get("address")
