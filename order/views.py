@@ -126,13 +126,15 @@ def process_order(request):
                 if key == "session_key":
                     del request.session[key]
 
-            stamp_id = int(request.session.get('stamp_id'))
-            try:
-                stamp = Stamp.objects.get(id=stamp_id, user=user)
-                stamp.used = True
-                stamp.save()
-            except Stamp.DoesNotExist:
-                pass
+            stamp_session_id = request.session.get('stamp_id')
+            if stamp_session_id:
+                stamp_id = int(stamp_session_id)
+                try:
+                    stamp = Stamp.objects.get(id=stamp_id, user=user)
+                    stamp.used = True
+                    stamp.save()
+                except Stamp.DoesNotExist:
+                    pass
 
             messages.success(request, "تم تأكيد الطلب")
             return redirect('order_done')
