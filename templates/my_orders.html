@@ -79,16 +79,13 @@
                 <div class="stamp-container">
                     <h3>الاختام الذهبية </h3>
                     <div class="stamp-list">
-                        {% for stamp in stamps %}
-                            <div class="stamp-item">
-                                <img src="{% static 'img/stamp2.png' %}" alt="Stamp" class="stamp-img">
-                                <div class="stamp-text">
-                                    <span>🏷️ ختم #{{ forloop.counter }}</span>
-                                    <small>تم الحصول عليه في: {{ stamp.created_at|date:"Y-m-d" }}</small><br>
-                                    <small>يمكنك استخدامه لطلب وجبة مجانية لا تزيد قيمتها عن 50 درهماً</small>
-                                </div>
+                        <div class="stamp-item">
+                            <h1 class="stamp-text">X{{stamps.count}} </h1><img src="{% static 'img/stamp2.png' %}" alt="Stamp" class="stamp-img">
+                            <div class="stamp-text">
+                                <span>🏷️ الختم الذهبي</span>
+                                <small>يمكنك استخدامه لطلب وجبة مجانية لا تزيد قيمتها عن 50 درهماً</small>
                             </div>
-                        {% endfor %}
+                        </div>
                     </div>
                 </div>
             {% else %}

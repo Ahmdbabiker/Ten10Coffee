@@ -100,16 +100,14 @@
     {% if stamps %}
         <div class="stamp-container">
             <div class="stamp-list">
-                {% for stamp in stamps %}
                 <div class="stamp-message">
-                    <h1>X10</h1><img src="{% static 'img/stamp2.png' %}" alt="Stamp" class="stamp-img"><br>
+                    <h1 class="stamp-text">X{{stamps.count}} </h1><img src="{% static 'img/stamp2.png' %}" alt="Stamp" class="stamp-img">
                     <div class="stamp-text">
-                        <span>تهانينا ! لقد حصلت علي الختم الذهبي</span><br>
-                        <small>وأصبح باٍمكانك الان استخدام الختم وطلب وجبة مجانية</small><br>
+                        <span>تهانينا ! لقد حصلت علي الختم الذهبي</span>
+                        <small>وأصبح باٍمكانك الان استخدام الختم وطلب وجبة مجانية</small>
                         <small>لا تزيد قيمتها عن 50 درهماً</small>
                     </div>
                 </div>
-                {% endfor %}
             </div>
         </div>
     {% endif %}

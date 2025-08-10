@@ -34,7 +34,7 @@ admin.site.register(Coupon)
 @admin.register(Stamp)
 class StampAdmin(admin.ModelAdmin):
 	list_display = ["__str__", "used"]
-	readonly_fields = ["code", "user", "used", "order_count_at_creation"]
+	readonly_fields = ["code", "user", "order_count_at_creation"]
 
 	def has_add_permission(self, request):
 		return False
