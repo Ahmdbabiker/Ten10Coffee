@@ -2169,6 +2169,15 @@ th, td {
     min-width: 150px;
 }
 
+.stamp-message {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    min-width: 150px;
+}
+
 .stamp-img {
     width: 70px;
     height: 70px;
@@ -2182,6 +2191,14 @@ th, td {
     color: #b38600;
     text-align: right;
     direction: rtl;
+}
+
+.stamp-message-text {
+    display: flex;
+    flex-direction: column;
+    font-weight: 600;
+    color: #000;
+    text-align: center;
 }
 
 .stamp-home {

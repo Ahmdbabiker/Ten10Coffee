@@ -85,7 +85,34 @@
 
 <a href="{% url 'home' %}" style="color: rgb(46, 46, 46);">العودة إلى الصفحة الرئيسية</a>
 
-
+    {% if stamp_message %}
+        <div class="stamp-container">
+            <div class="stamp-list">
+                <div class="stamp-message">
+                    <h1>X{{remainder}}</h1><img src="{% static 'img/stamp.png' %}" alt="Stamp" class="stamp-img"><br>
+                    <div class="stamp-message-text">
+                        <small>حصلت علي ختم جديد ,بمجرد اتمامك ل10 اختام سوف تحصل علي وجبة مجانية</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% endif %}
+    {% if stamps %}
+        <div class="stamp-container">
+            <div class="stamp-list">
+                {% for stamp in stamps %}
+                <div class="stamp-message">
+                    <h1>X10</h1><img src="{% static 'img/stamp2.png' %}" alt="Stamp" class="stamp-img"><br>
+                    <div class="stamp-text">
+                        <span>تهانينا ! لقد حصلت علي الختم الذهبي</span><br>
+                        <small>وأصبح باٍمكانك الان استخدام الختم وطلب وجبة مجانية</small><br>
+                        <small>لا تزيد قيمتها عن 50 درهماً</small>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    {% endif %}
 </div>
 
 

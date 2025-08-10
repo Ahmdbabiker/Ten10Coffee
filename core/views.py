@@ -347,17 +347,19 @@ def user_orders(request , user_id):
     user_order_count = current_user.order_set.count()
     remainder = user_order_count % 10
     orders_remaining = 10 - remainder if remainder != 0 else 0
-    
-    stamp_message = ""
-    if orders_remaining:
-        stamp_message = f"قم بإتمام {orders_remaining} طلب{'اً' if orders_remaining == 1 else 'ات'} للحصول على ختم جديد!"
-    
+
+    # stamp_message = False
+    # if orders_remaining:
+    stamp_message = True
+
     stamps = current_user.stamp_set.filter(used=False).order_by("-created_at")
 
     data  = {
         "user_orders": get_user,
         "stamp_message": stamp_message,
         "stamps": stamps,
+        "orders_remaining": orders_remaining,
+        "remainder": remainder,
     }
     return render(request, "my_orders.html" , data)
 
@@ -370,13 +372,29 @@ def order_done(request):
         message = f"Order ID: {get_session}\nLocation: {profile.home_location}"
         query_params = urlencode({'text': message})
         whatsapp_link = f"{base_url}?{query_params}"
+        user_order_count = request.user.order_set.count()
+        remainder = user_order_count % 10
+        orders_remaining = 10 - remainder if remainder != 0 else 0
+        stamp_message = False
+        if orders_remaining:
+            stamp_message = True
+        stamps = request.user.stamp_set.filter(used=False).order_by("-created_at")
     else:
         base_url = "https://wa.me/971504779748"
         message = f"Order ID: {get_session}"
         query_params = urlencode({'text': message})
         whatsapp_link = f"{base_url}?{query_params}"
+        stamps = None
+        stamp_message = None
+        remainder = None
 
-    data = {"order_id":get_session ,"whatsapp_link":whatsapp_link }
+    data = {
+        "order_id": get_session,
+        "whatsapp_link": whatsapp_link,
+        "stamp_message": stamp_message,
+        "remainder": remainder,
+        "stamps": stamps,
+    }
     return render(request , "order_done.html" , data)
 
 
