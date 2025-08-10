@@ -25,12 +25,9 @@ def process_order(request):
 
         # Handle any discounts if applicable
         discount = request.session.get('discount', 0)
-        stamp_discount = request.session.get('stamp_discount', 0)
+        
         if discount > 0:
             totals -= Decimal(discount)
-            totals = max(totals, 0)
-        if stamp_discount > 0:
-            totals -= Decimal(stamp_discount)
             totals = max(totals, 0)
         # Get the extras data from the session
         get_extras = request.session.get("user_extras", {})
@@ -52,6 +49,10 @@ def process_order(request):
                         specific_quantity = extra.get("specific_quantity", 0)
                         totals += extra_obj.price * specific_quantity  # Apply to a specific number of items
 
+        stamp_discount = request.session.get('stamp_discount', 0)
+        if stamp_discount > 0:
+            totals -= Decimal(stamp_discount)
+            totals = max(totals, 0)
         # Final total to be paid
         amount_paid = totals
         request.session.pop('discount', None)
@@ -260,15 +261,42 @@ def apply_stamp(request):
         user = request.user
         user_stamps = user.stamp_set.filter(used=False).order_by("-created_at")
         stamp = user_stamps.first()
+
+        get_extras = request.session.get("user_extras", {})
+
         if stamp:
-            product_prices = [product.price for product in cart_products]
-            if product_prices:
-                sorted_prices = sorted(product_prices, reverse=True)
-                discount = next((p for p in sorted_prices if p <= 50), 0)
-                totals -= discount  # Apply discount
-                totals = max(totals, 0)  # Ensure total does not go below zero
+            meal_totals = []
+            for product in cart_products:
+                base_price = product.price
+                product_id = str(product.id)
+                quantity = quantities.get(product_id, {}).get('quantity', 1)
+
+                extras_price = 0
+                product_extras = get_extras.get(product_id, [])
+                for extra in product_extras:
+                    extra_obj = Extra.objects.filter(id=extra["extra_id"]).first()
+                    if extra_obj:
+                        if extra["apply_to"] == "all":
+                            extras_price += extra_obj.price * quantity
+                        elif extra["apply_to"] == "one":
+                            extras_price += extra_obj.price
+                        elif extra["apply_to"] == "specific":
+                            specific_quantity = extra.get("specific_quantity", 0)
+                            extras_price += extra_obj.price * specific_quantity
+
+                total_price_with_extras = base_price + extras_price
+                meal_totals.append(total_price_with_extras)
+
+            if meal_totals:
+                sorted_totals = sorted(meal_totals, reverse=True)
+                discount = next((p for p in sorted_totals if p <= 50), 0)
+
+                totals -= discount
+                totals = max(totals, 0)
+
                 request.session["stamp_id"] = stamp.id
                 request.session["stamp_discount"] = float(discount)
+
                 message = f"مبروك! تم الحصول على خصم بقيمة {discount} درهما"
             else:
                 message = "لا توجد منتجات في السلة لتطبيق الطابع."
@@ -281,5 +309,5 @@ def apply_stamp(request):
             'cart_products': cart_products,
             'quantities': quantities,
         })
-    else:
-        return redirect("home")
+
+    return redirect("home")
