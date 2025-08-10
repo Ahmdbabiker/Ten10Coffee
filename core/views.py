@@ -2,7 +2,7 @@ import json
 import time
 from datetime import timedelta
 from urllib.parse import urlencode
-
+from django.contrib.auth.decorators import login_required
 from accounts.forms import ProfileForm
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
@@ -22,10 +22,18 @@ from .models import *
 # Create your views here.
 
 def home(request):
+    user = request.user
+    print(user)
+    stamps = None
+    if user.is_authenticated:
+        stamps = user.stamp_set.filter(used=False)
     all_products = Product.objects.all()
     best_seller = Product.objects.order_by('-no_of_buying')[:3]
-    data = {"all_products":all_products ,
-    "best":best_seller}
+    data = {
+        "all_products": all_products,
+        "best": best_seller,
+        "stamps": stamps,
+    }
     return render(request , "index.html" , data)
 
 def contact(request):
@@ -332,10 +340,25 @@ class ProductAdd(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, C
         return False
 
 
+@login_required
 def user_orders(request , user_id):
-    current_user = request.user.id
-    get_user = OrderItem.objects.filter(user__id = current_user)
-    data  = {"user_orders":get_user}
+    current_user = request.user
+    get_user = OrderItem.objects.filter(user__id=current_user.id)
+    user_order_count = current_user.order_set.count()
+    remainder = user_order_count % 10
+    orders_remaining = 10 - remainder if remainder != 0 else 0
+    
+    stamp_message = ""
+    if orders_remaining:
+        stamp_message = f"قم بإتمام {orders_remaining} طلب{'اً' if orders_remaining == 1 else 'ات'} للحصول على ختم جديد!"
+    
+    stamps = current_user.stamp_set.filter(used=False).order_by("-created_at")
+
+    data  = {
+        "user_orders": get_user,
+        "stamp_message": stamp_message,
+        "stamps": stamps,
+    }
     return render(request, "my_orders.html" , data)
 
 def order_done(request):

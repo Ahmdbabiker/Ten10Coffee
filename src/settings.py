@@ -154,3 +154,6 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')  # Where uploaded media files are s
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MAINTENANCE_REDIRECT_URL = '/maintenance/'
+
+
+LOGIN_URL = "signin"

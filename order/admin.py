@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Order, OrderItem , Coupon 
+from .models import Order, OrderItem , Coupon, Stamp
 
 from django.contrib.auth.models import User
 
@@ -29,3 +29,12 @@ admin.site.register(Order, OrderAdmin)
 
 
 admin.site.register(Coupon)
+
+
+@admin.register(Stamp)
+class StampAdmin(admin.ModelAdmin):
+	list_display = ["__str__", "used"]
+	readonly_fields = ["code", "user", "used", "order_count_at_creation"]
+
+	def has_add_permission(self, request):
+		return False

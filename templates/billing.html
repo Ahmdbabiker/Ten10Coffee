@@ -94,6 +94,14 @@
                         {% endif%}
                          {% endif%}
                     </form>
+                    {% if has_stamps %}
+                    <small>🏷️ تهانينا ! لقد حصلت علي الختم <br>
+                         يمكنك استخدامه للحصول علي وجبة مجانية</small><br>
+                    <form method="POST" action="{% url 'apply_stamp' %}">
+                        {% csrf_token %}
+                        <input type="submit" value="تطبيق الختم"><br>
+                    </form>
+                    {% endif %}
                 </div>
 
                 <div class="billing">

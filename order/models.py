@@ -37,6 +37,20 @@ class Coupon(models.Model):
         return self.active and (not self.expiration_date or self.expiration_date > now())
 
 
+class Stamp(models.Model):
+    code = models.CharField("Stamp Code", max_length=20, blank=True, unique=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name="User")
+    order_count_at_creation = models.PositiveIntegerField()
+    used = models.BooleanField("Used", default=False)
+    created_at = models.DateTimeField('Created at', auto_now_add=True)
+
+    class Meta:
+        ordering = ("-created_at",)
+        verbose_name = "Stamp"
+        verbose_name_plural = "Stamps"
+
+    def __str__(self):
+        return self.code
 
 
 # Create Order Items Model

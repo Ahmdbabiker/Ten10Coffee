@@ -25,10 +25,13 @@ def process_order(request):
 
         # Handle any discounts if applicable
         discount = request.session.get('discount', 0)
+        stamp_discount = request.session.get('stamp_discount', 0)
         if discount > 0:
             totals -= Decimal(discount)
             totals = max(totals, 0)
-
+        if stamp_discount > 0:
+            totals -= Decimal(stamp_discount)
+            totals = max(totals, 0)
         # Get the extras data from the session
         get_extras = request.session.get("user_extras", {})
 
@@ -111,11 +114,25 @@ def process_order(request):
                 # Update product purchase count
                 product.no_of_buying += quantity
                 product.save()
+            # Create Stamp every 10th order
+            user_orders = user.order_set.count()
+            expected_stamp_count = user_orders // 10
+            current_stamp_count = user.stamp_set.count()
+            if expected_stamp_count > current_stamp_count:
+                Stamp.objects.create(user=user, order_count_at_creation=user_orders)
 
             # Clear session data
             for key in list(request.session.keys()):
                 if key == "session_key":
                     del request.session[key]
+
+            stamp_id = int(request.session.get('stamp_id'))
+            try:
+                stamp = Stamp.objects.get(id=stamp_id, user=user)
+                stamp.used = True
+                stamp.save()
+            except Stamp.DoesNotExist:
+                pass
 
             messages.success(request, "تم تأكيد الطلب")
             return redirect('order_done')
@@ -186,15 +203,6 @@ def process_order(request):
     return redirect('home')
 
 
-
-
-
-
-
-
-
-
-
 def apply_coupon(request):
     if request.method == 'POST':
         cart = Cart(request)
@@ -241,6 +249,35 @@ def apply_coupon(request):
         return redirect("home")
 
 
+def apply_stamp(request):
+    if request.method == 'POST':
+        cart = Cart(request)
+        cart_products = cart.get_prods()
+        quantities = cart.get_quants()
+        totals = cart.total()
+        user = request.user
+        user_stamps = user.stamp_set.filter(used=False).order_by("-created_at")
+        stamp = user_stamps.first()
+        if stamp:
+            product_prices = [product.price for product in cart_products]
+            if product_prices:
+                sorted_prices = sorted(product_prices, reverse=True)
+                discount = next((p for p in sorted_prices if p <= 50), 0)
+                totals -= discount  # Apply discount
+                totals = max(totals, 0)  # Ensure total does not go below zero
+                request.session["stamp_id"] = stamp.id
+                request.session["stamp_discount"] = float(discount)
+                message = f"مبروك! تم الحصول على خصم بقيمة {discount} درهما"
+            else:
+                message = "لا توجد منتجات في السلة لتطبيق الطابع."
+        else:
+            message = "لا يوجد لديك طوابع متاحة."
 
-
-
+        return render(request, 'billing.html', {
+            'message': message,
+            'total': totals,
+            'cart_products': cart_products,
+            'quantities': quantities,
+        })
+    else:
+        return redirect("home")

@@ -63,6 +63,30 @@
     <!-- sandwiches -->
        <div class="sandwiches">
            <div class="container">
+            {% if stamp_message %}
+                <div class="alert alert-info">
+                    {{ stamp_message }}
+                </div>
+            {% endif %}
+            {% if stamps %}
+                <div class="stamp-container">
+                    <h3>الاختام الخاصة بك</h3>
+                    <div class="stamp-list">
+                        {% for stamp in stamps %}
+                            <div class="stamp-item">
+                                <img src="{% static 'img/stamp.png' %}" alt="Stamp" class="stamp-img">
+                                <div class="stamp-text">
+                                    <span>🏷️ ختم #{{ forloop.counter }}</span>
+                                    <small>تم الحصول عليه في: {{ stamp.created_at|date:"Y-m-d" }}</small><br>
+                                    <small>يمكنك استخدامه لطلب وجبة مجانية لا تزيد قيمتها عن 50 درهماً</small>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% else %}
+                <p style="text-align:center; color: gray;">ليس لديك أي ختم حتى الآن</p>
+            {% endif %}
                <h2> الطلبات السـابقة</h2>
                <div class="taking-snadwiches">
 

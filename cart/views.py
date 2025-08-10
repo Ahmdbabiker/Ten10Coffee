@@ -214,6 +214,12 @@ def billing_details(request):
 
         # Process data for rendering
         if request.user.is_authenticated:
+            user = request.user
+            stamps = user.stamp_set.filter(used=False).order_by("-created_at")
+            if stamps:
+                has_stamps = True
+            else:
+                has_stamps = False
             user_data = request.session.get("user_data", {})
             user_data["pickup"] = request.POST.get("pickup")
             user_data["notes"] = request.POST.get("notes")
@@ -236,6 +242,7 @@ def billing_details(request):
                 "cart_products": cart_products,
                 "quantities": quantities,
                 "total": total,
+                "has_stamps": has_stamps
             }
             return render(request, "billing.html", data)
         else:
@@ -275,7 +282,8 @@ def billing_details(request):
                 "cart_products": cart_products,
                 "quantities": quantities,
                 "total": total,
-                "unknown_user": request.session["unknown_user"]
+                "unknown_user": request.session["unknown_user"],
+                "has_stamps": False
             }
             return render(request, "billing.html", data)
 
