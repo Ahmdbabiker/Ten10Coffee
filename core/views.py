@@ -2,21 +2,23 @@ import json
 import time
 from datetime import timedelta
 from urllib.parse import urlencode
-from django.contrib.auth.decorators import login_required
+
 from accounts.forms import ProfileForm
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.contrib.messages.views import SuccessMessageMixin
 from django.core.paginator import Paginator
 from django.db.models import Avg, Sum
 from django.http import JsonResponse, StreamingHttpResponse
+from django.http.response import Http404
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils import timezone
-from django.views.generic import CreateView, UpdateView, ListView, DeleteView
+from django.views.generic import CreateView, DeleteView, ListView, UpdateView
 from order.models import *
 
-from .forms import ProductForm, CityForm, MaintenanceModeForm
+from .forms import CityForm, MaintenanceModeForm, ProductForm
 from .models import *
 
 # Create your views here.
@@ -344,7 +346,7 @@ class ProductAdd(LoginRequiredMixin, UserPassesTestMixin, SuccessMessageMixin, C
 def user_orders(request , user_id):
     current_user = request.user
     get_user = OrderItem.objects.filter(user__id=current_user.id)
-    user_order_count = current_user.order_set.count()
+    user_order_count = current_user.order_set.filter(amount_paid__gte=30).count()
     remainder = user_order_count % 10
     orders_remaining = 10 - remainder if remainder != 0 else 0
 
@@ -372,11 +374,15 @@ def order_done(request):
         message = f"Order ID: {get_session}\nLocation: {profile.home_location}"
         query_params = urlencode({'text': message})
         whatsapp_link = f"{base_url}?{query_params}"
-        user_order_count = request.user.order_set.count()
+        user_order_count = request.user.order_set.filter(amount_paid__gte=30).count()
         remainder = user_order_count % 10
         orders_remaining = 10 - remainder if remainder != 0 else 0
         stamp_message = False
-        if orders_remaining:
+        try:
+            current_order = Order.objects.get(id=get_session)
+        except Order.DoesNotExist:
+            raise Http404
+        if orders_remaining and current_order.amount_paid >= 30:
             stamp_message = True
         stamps = request.user.stamp_set.filter(used=False).order_by("-created_at")
     else:

@@ -116,7 +116,7 @@ def process_order(request):
                 product.no_of_buying += quantity
                 product.save()
             # Create Stamp every 10th order
-            user_orders = user.order_set.count()
+            user_orders = user.order_set.filter(amount_paid__gte=30).count()
             expected_stamp_count = user_orders // 10
             current_stamp_count = user.stamp_set.count()
             if expected_stamp_count > current_stamp_count:
