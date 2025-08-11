@@ -66,8 +66,11 @@
             {% if stamp_message %}
                 <div class="stamp-container">
                     <div class="stamp-list">
-                        <div class="stamp-message">
-                            <h1>X{{remainder}}</h1><img src="{% static 'img/stamp.png' %}" alt="Stamp" class="stamp-img"><br>
+                        <div class="stamp-message" style="text-align:center">
+                            <h1  style="
+                            display: inline-block;
+                            font-size: 30px;
+                            opacity: 0.7">X{{remainder}}</h1><img src="{% static 'img/stamp.png' %}" alt="Stamp" class="stamp-img" width="80px" height="80px"><br>
                             <div class="stamp-message-text">
                                 <small>   لديك {{remainder}} اختام ,بمجرد اتمامك ل10 اختام سوف تحصل علي وجبة مجانية</small>
                             </div>
@@ -89,9 +92,9 @@
                     </div>
                 </div>
             {% else %}
-                <p style="text-align:center; color: gray;">ليس لديك أي ختم ذهبي حتى الآن</p>
+                <p style="text-align:center; color: gray; margin:20px 0 ">ليس لديك أي ختم ذهبي حتى الآن</p>
             {% endif %}
-               <h2> الطلبات السـابقة</h2>
+               <h2 style="margin-top:15px"> الطلبات السـابقة</h2>
                <div class="taking-snadwiches">
 
                 {% if user_orders %}
